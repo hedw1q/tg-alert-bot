@@ -18,7 +18,7 @@ import static ru.hedw1q.TgBot.discord.DsBotInitializer.stickerMap;
 public class MessageCreateListener extends MessageListener implements EventListener<MessageCreateEvent> {
 
     static final long TG_CHANNEL_ID = -1001537091172L;
-    static final long DS_CHANNEL_ID = 860904072306229288L;
+    static final long DS_CHANNEL_ID = 552454831122546699L;
 
     @Override
     public Class<MessageCreateEvent> getEventType() {
