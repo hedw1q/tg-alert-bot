@@ -1,4 +1,4 @@
-package ru.hedw1q.TgBot.tw.config;
+package ru.hedw1q.TgBot.twitch.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +14,6 @@ public class TwitchConfiguration {
     private String clientId;
     private String clientSecret;
     private String botNickname;
-
     private String channelName;
     private String teamName;
 }

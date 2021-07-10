@@ -1,4 +1,4 @@
-package ru.hedw1q.TgBot.tg;
+package ru.hedw1q.TgBot.telegram;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

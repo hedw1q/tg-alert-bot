@@ -1,8 +1,8 @@
-package ru.hedw1q.TgBot.tw;
+package ru.hedw1q.TgBot.twitch;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import ru.hedw1q.TgBot.tw.config.TwitchConfiguration;
+import ru.hedw1q.TgBot.twitch.config.TwitchConfiguration;
 
 import java.util.Map;
 

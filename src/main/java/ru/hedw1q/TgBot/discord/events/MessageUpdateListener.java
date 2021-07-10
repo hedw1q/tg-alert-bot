@@ -1,4 +1,4 @@
-package ru.hedw1q.TgBot.ds.events;
+package ru.hedw1q.TgBot.discord.events;
 
 import discord4j.core.event.domain.message.MessageUpdateEvent;
 import org.springframework.stereotype.Service;

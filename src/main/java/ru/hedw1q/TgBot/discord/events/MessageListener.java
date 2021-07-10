@@ -1,11 +1,11 @@
-package ru.hedw1q.TgBot.ds.events;
+package ru.hedw1q.TgBot.discord.events;
 
 import discord4j.core.object.entity.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
-import ru.hedw1q.TgBot.tg.TgBot;
+import ru.hedw1q.TgBot.telegram.TgBot;
 
 
 /**

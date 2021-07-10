@@ -1,19 +1,22 @@
-package ru.hedw1q.TgBot.tw;
+package ru.hedw1q.TgBot.twitch;
 
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.core.EventManager;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.chat.TwitchChat;
-import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
+import com.github.twitch4j.events.ChannelViewerCountUpdateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.hedw1q.TgBot.tg.TgBot;
-import ru.hedw1q.TgBot.tw.config.TwitchConfiguration;
+import ru.hedw1q.TgBot.telegram.TgBot;
+import ru.hedw1q.TgBot.twitch.config.TwitchConfiguration;
+
+import java.time.Duration;
+import java.time.Instant;
 
 /**
  * @author hedw1q
@@ -26,6 +29,9 @@ public class TwBot {
     private static final long TG_CHANNEL_ID = -1001537091172L;
     private static final Logger logger = LoggerFactory.getLogger(TwBot.class);
     private TwitchChat twitchChat;
+    private Instant streamStartTime;
+    private Instant streamFinishTime;
+    private int channelViewerCount=0;
 
     public static TwBot create(TwitchConfiguration twitchConfiguration) {
         TwBot twBot = new TwBot();
@@ -70,19 +76,38 @@ public class TwBot {
                 .onEvent(ChannelGoLiveEvent.class, this::onChannelGoLive);
         eventManager.
                 onEvent(ChannelGoOfflineEvent.class, this::onChannelGoOffline);
+        eventManager.
+                onEvent(ChannelViewerCountUpdateEvent.class, this::onChannelViewerCountUpdate);
 //        eventManager
 //                .onEvent(ChannelMessageEvent.class, this::onChannelMessage);
     }
 
     private void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
-        tgBot.sendMessageToChannel(TG_CHANNEL_ID, "Хуня завела! Pog");
+        streamStartTime = channelGoLiveEvent.getStream().getStartedAtInstant();
+        String message="\uD83D\uDD34 Стрим на Twitch \uD83D\uDD34 \n" +
+                "Название: \n" +channelGoLiveEvent.getStream().getTitle()+
+                "\n" +
+                "Ссылка: https://www.twitch.tv/"+channelGoLiveEvent.getChannel().getName();
+        tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
+    }
+
+    private void onChannelViewerCountUpdate(ChannelViewerCountUpdateEvent channelViewerCountUpdateEvent){
+        channelViewerCount=channelViewerCountUpdateEvent.getViewerCount();
     }
 
     private void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
-        tgBot.sendMessageToChannel(TG_CHANNEL_ID, "Стрим закончен! SadCat");
+        streamFinishTime = channelGoOfflineEvent.getFiredAtInstant();
+        Duration streamDuration=Duration.between(streamStartTime,streamStartTime);
+        String message="⚫️ Стрим на Twitch окончен ⚫️ \n" +
+                "Длительность: " +streamDuration.toHours()+" ч. "+ (streamDuration.toMinutes()-streamDuration.toHours()*60)+" мин.\n"+
+                "Зрителей: " +channelViewerCount+"\n"+
+                "\n" +
+                "Ссылка: https://www.twitch.tv/"+channelGoOfflineEvent.getChannel().getName();
+
+        tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
     }
 
-    private void onChannelMessage(ChannelMessageEvent channelMessageEvent){
-        tgBot.sendMessageToChannel(TG_CHANNEL_ID, channelMessageEvent.getMessage());
-    }
+//    private void onChannelMessage(ChannelMessageEvent channelMessageEvent){
+//        tgBot.sendMessageToChannel(TG_CHANNEL_ID, channelMessageEvent.getMessage());
+//    }
 }
