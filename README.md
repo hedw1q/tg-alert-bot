@@ -1,1 +1,1 @@
-BOTEZ
+Telegram channel: https://t.me/joinchat/mi1pHL6VdQZjMGQy

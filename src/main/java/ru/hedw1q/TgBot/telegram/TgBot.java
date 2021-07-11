@@ -43,56 +43,56 @@ public class TgBot extends TelegramLongPollingCommandBot {
     public void processNonCommandUpdate(Update update) {
 //        Message msg = update.getMessage();
 //        Long chatId = msg.getChatId();
-//        String answer = "Привет! ты милый";
-//        String url="https://cdn.discordapp.com/attachments/552454831122546699/810226816286982154/image0.jpg";
-//        sendAttachmentMessageToChannel(chatId,url);
+//
+//        sendTextMessageToChannel(chatId,chatId.toString());
     }
 
-    public void sendTextMessageToChannel(Long chatId, String text) {
-        setAnswer(chatId, text);
+    public Message sendTextMessageToChannel(Long chatId, String text) {
+        return setAnswer(chatId, text);
     }
 
-    public void sendAttachmentMessageToChannel(Long chatId, String url, String text) {
+    public Message sendAttachmentMessageToChannel(Long chatId, String url, String text) {
         try {
             URL urlObject = new URL(url);
             URLConnection conn = urlObject.openConnection();
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0");
             conn.connect();
-            String contentType = conn.getContentType().trim();
+            String contentType = conn.getContentType().trim().split(";")[0];
+//           final  Pattern pattern = Pattern.compile("<@.+>");
+//            final Matcher matcher = pattern.matcher(contentType);
             File file = new File(urlObject.getFile());
             FileUtils.copyInputStreamToFile(conn.getInputStream(), file);
-            switch (contentType) {
-                case "image/png":
-                case "image/bmp":
-                case "image/tiff":
-                case "image/jpeg":
-                    sendImageMessageToChannel(chatId, file, text);
-                case "image/gif":
-                    sendAnimationMessageToChannel(chatId, file, text);
-                default:
-                    return;
-            }
+                switch (contentType) {
+                    case "image/png":
+                    case "image/bmp":
+                    case "image/tiff":
+                    case "image/jpeg":
+                        return sendImageMessageToChannel(chatId, file, text);
+                    case "image/gif":
+                        return sendAnimationMessageToChannel(chatId, file, text);
+                    default:
+                        return null;
+                }
         } catch (TelegramApiException | IOException e) {
             logger.error(ExceptionUtils.getFullStackTrace(e));
+            return null;
         }
     }
 
-    private void sendImageMessageToChannel(Long chatId, File file, String text) throws TelegramApiException {
+    private Message sendImageMessageToChannel(Long chatId, File file, String text) throws TelegramApiException {
         SendPhoto msg = new SendPhoto();
         msg.setPhoto(new InputFile(file));
         msg.setChatId(chatId.toString());
         msg.setCaption(text);
-
-        execute(msg);
+       return execute(msg);
     }
 
-    private void sendAnimationMessageToChannel(Long chatId, File file, String text) throws TelegramApiException {
+    private Message sendAnimationMessageToChannel(Long chatId, File file, String text) throws TelegramApiException {
         SendAnimation msg = new SendAnimation();
         msg.setAnimation(new InputFile(file));
         msg.setChatId(chatId.toString());
         msg.setCaption(text);
-
-        execute(msg);
+        return execute(msg);
     }
 
     /**
@@ -101,14 +101,15 @@ public class TgBot extends TelegramLongPollingCommandBot {
      * @param chatId id чата
      * @param text   текст ответа
      */
-    private void setAnswer(Long chatId, String text) {
+    private Message setAnswer(Long chatId, String text) {
         SendMessage answer = new SendMessage();
         answer.setText(text);
         answer.setChatId(chatId.toString());
         try {
-            execute(answer);
+           return execute(answer);
         } catch (TelegramApiException e) {
             logger.error(e.getMessage());
+            return null;
         }
     }
 

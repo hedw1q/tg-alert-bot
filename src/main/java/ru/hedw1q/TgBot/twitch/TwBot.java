@@ -23,15 +23,15 @@ import java.time.Instant;
  */
 @Component
 public class TwBot {
+    public static long TG_CHANNEL_ID = -1001537091172L;
 
     @Autowired
     private TgBot tgBot;
-    private static final long TG_CHANNEL_ID = -1001537091172L;
     private static final Logger logger = LoggerFactory.getLogger(TwBot.class);
     private TwitchChat twitchChat;
     private Instant streamStartTime;
     private Instant streamFinishTime;
-    private int channelViewerCount=0;
+    private int channelViewerCount = 0;
 
     public static TwBot create(TwitchConfiguration twitchConfiguration) {
         TwBot twBot = new TwBot();
@@ -39,15 +39,15 @@ public class TwBot {
         return twBot;
     }
 
-     void connect(TwitchConfiguration twitchConfiguration) {
+    void connect(TwitchConfiguration twitchConfiguration) {
         TwitchClient twitchClient = createTwitchClient(twitchConfiguration);
         registerEventHandlers(twitchClient.getEventManager());
 
         twitchChat = twitchClient.getChat();
         twitchChat.joinChannel(twitchConfiguration.getChannelName());
 
-         logger.info("Connected to twitch.tv/"+ twitchConfiguration.getChannelName());
-     }
+        logger.info("Connected to twitch.tv/" + twitchConfiguration.getChannelName());
+    }
 
 
     private TwitchClient createTwitchClient(TwitchConfiguration twitchConfiguration) {
@@ -71,7 +71,7 @@ public class TwBot {
     }
 
 
-    private void registerEventHandlers(EventManager eventManager) {
+    void registerEventHandlers(EventManager eventManager) {
         eventManager
                 .onEvent(ChannelGoLiveEvent.class, this::onChannelGoLive);
         eventManager.
@@ -82,31 +82,32 @@ public class TwBot {
 //                .onEvent(ChannelMessageEvent.class, this::onChannelMessage);
     }
 
-    private void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
-        streamStartTime = channelGoLiveEvent.getStream().getStartedAtInstant();
-        String message="\uD83D\uDD34 Стрим на Twitch \uD83D\uDD34 \n" +
-                "Название: \n" +channelGoLiveEvent.getStream().getTitle()+
-                "Категория: \n" +channelGoLiveEvent.getStream().getGameName()+
+    void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
+        streamStartTime=channelGoLiveEvent.getStream().getStartedAtInstant();
+        String message = "\uD83D\uDD34 Стрим на Twitch \uD83D\uDD34 \n" +
+                "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
+                "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
                 "\n" +
-                "Ссылка: https://www.twitch.tv/"+channelGoLiveEvent.getChannel().getName();
-        String thumbnailUrl=channelGoLiveEvent.getStream().getThumbnailUrl();
+                "Ссылка: https://www.twitch.tv/" + channelGoLiveEvent.getChannel().getName();
 
-        tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID,thumbnailUrl,message);
+        String thumbnailUrl = channelGoLiveEvent.getStream().getThumbnailUrl();
+
+        tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
         //tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
     }
 
-    private void onChannelViewerCountUpdate(ChannelViewerCountUpdateEvent channelViewerCountUpdateEvent){
-        channelViewerCount=channelViewerCountUpdateEvent.getViewerCount();
+    void onChannelViewerCountUpdate(ChannelViewerCountUpdateEvent channelViewerCountUpdateEvent) {
+        channelViewerCount = channelViewerCountUpdateEvent.getViewerCount();
     }
 
-    private void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
-        streamFinishTime = channelGoOfflineEvent.getFiredAtInstant();
-        Duration streamDuration=Duration.between(streamStartTime,streamStartTime);
-        String message="⚫️ Стрим на Twitch окончен ⚫️ \n" +
-                "Длительность: " +streamDuration.toHours()+" ч. "+ (streamDuration.toMinutes()-streamDuration.toHours()*60)+" мин.\n"+
-                "Зрителей: " +channelViewerCount+"\n"+
+    void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
+        streamFinishTime=channelGoOfflineEvent.getFiredAtInstant();
+        Duration streamDuration = Duration.between(streamStartTime, streamStartTime);
+        String message = "⚫️ Стрим на Twitch окончен ⚫️ \n" +
+                "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
+                "Зрителей: " + channelViewerCount + "\n" +
                 "\n" +
-                "Ссылка: https://www.twitch.tv/"+channelGoOfflineEvent.getChannel().getName();
+                "Ссылка: https://www.twitch.tv/" + channelGoOfflineEvent.getChannel().getName();
 
         tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
     }

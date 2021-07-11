@@ -1,0 +1,70 @@
+package ru.hedw1q.TgBot.telegram;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.telegram.telegrambots.meta.api.objects.Message;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
+
+/**
+ * @author hedw1q
+ */
+@SpringBootTest
+public class TgBotTest {
+    @Autowired
+    TgBot tgBot;
+    String testmsg = "TestMessage!;!@#!@# \uD83D\uDE34";
+
+    @Test
+    void sendTextMessageToChannelTest() {
+        Message msg = tgBot.sendTextMessageToChannel(TEST_TELEGRAM_CHANNEL_ID, testmsg);
+
+        assertThat(msg.getChatId()).isEqualTo(TEST_TELEGRAM_CHANNEL_ID);
+        assertThat(msg.getText()).isEqualTo(testmsg);
+    }
+
+    @Test
+    void sendTextUrlMessageToChannelTest() {
+        final String msgUrl="@everyone Ну получается тогда завожу тест, ПОИНТОВЫЙ АУК на игры и the last spell\n" +
+                "\n" +
+                "https://www.twitch.tv/krabick\n" +
+                "https://www.twitch.tv/krabick\n" +
+                "https://www.twitch.tv/krabick \n" +
+                "\n" +
+                "memelord: Ankoreus\n" +
+                "Буду вас ждать\n" +
+                "\n" +
+                "\n" +
+                "https://media.discordapp.net/attachments/600450906877591583/711626829227884614/13160c5543430f30.png?width=880&height=495";
+
+        Message msg = tgBot.sendTextMessageToChannel(TEST_TELEGRAM_CHANNEL_ID, msgUrl);
+
+        assertThat(msg.getChatId()).isEqualTo(TEST_TELEGRAM_CHANNEL_ID);
+        assertThat(msg.getText()).isEqualTo(msgUrl);
+    }
+
+    @Test
+    void sendAttachmentMessageToChannelTest() {
+        final String jpgUrl = "https://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/jpeg420exif.jpg";
+        final String pngUrl = "https://homepages.cae.wisc.edu/~ece533/images/airplane.png";
+        final String gifUrl = "https://media.discordapp.net/attachments/860904072306229288/863483192464113674/3x.gif";
+
+        Message jpgMsg = tgBot.sendAttachmentMessageToChannel(TEST_TELEGRAM_CHANNEL_ID, jpgUrl, testmsg);
+        Message pngMsg = tgBot.sendAttachmentMessageToChannel(TEST_TELEGRAM_CHANNEL_ID, pngUrl, testmsg);
+        Message gifMsg = tgBot.sendAttachmentMessageToChannel(TEST_TELEGRAM_CHANNEL_ID, gifUrl, testmsg);
+
+        assertThat(jpgMsg.getChatId()).isEqualTo(TEST_TELEGRAM_CHANNEL_ID);
+
+        assertThat(jpgMsg.getCaption()).isEqualTo(testmsg);
+        assertThat(jpgMsg.getPhoto().get(0).getFileUniqueId()).isNotEmpty();
+
+        assertThat(pngMsg.getCaption()).isEqualTo(testmsg);
+        assertThat(pngMsg.getPhoto().get(0).getFileUniqueId()).isNotEmpty();
+
+        assertThat(gifMsg.getCaption()).isEqualTo(testmsg);
+        assertThat(gifMsg.getAnimation().getFileUniqueId()).isNotEmpty();
+    }
+
+}
