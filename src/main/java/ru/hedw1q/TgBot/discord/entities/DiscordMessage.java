@@ -34,8 +34,9 @@ public class DiscordMessage {
                             getMessageText().substring(matcher.start(), matcher.end())));
         }
         setMessageText(
-                StringUtils.remove(getMessageText(),
-                        "@everyone")
+                getMessageText()
+                        .replace("@everyone","")
+                        .replace("@here","")
         );
         return this;
     }

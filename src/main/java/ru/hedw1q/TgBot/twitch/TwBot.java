@@ -86,9 +86,13 @@ public class TwBot {
         streamStartTime = channelGoLiveEvent.getStream().getStartedAtInstant();
         String message="\uD83D\uDD34 Стрим на Twitch \uD83D\uDD34 \n" +
                 "Название: \n" +channelGoLiveEvent.getStream().getTitle()+
+                "Категория: \n" +channelGoLiveEvent.getStream().getGameName()+
                 "\n" +
                 "Ссылка: https://www.twitch.tv/"+channelGoLiveEvent.getChannel().getName();
-        tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
+        String thumbnailUrl=channelGoLiveEvent.getStream().getThumbnailUrl();
+
+        tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID,thumbnailUrl,message);
+        //tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
     }
 
     private void onChannelViewerCountUpdate(ChannelViewerCountUpdateEvent channelViewerCountUpdateEvent){
