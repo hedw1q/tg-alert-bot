@@ -27,9 +27,9 @@ import java.util.Map;
  */
 @Component
 public class TgBot extends TelegramLongPollingCommandBot {
+
     private static final Logger logger = LoggerFactory.getLogger(TgBot.class);
     private static final Map<String, String> getenv = System.getenv();
-
 
     private String BOT_NAME = getenv.get("telegram.botname");
     private String BOT_TOKEN = getenv.get("telegram.bottoken");

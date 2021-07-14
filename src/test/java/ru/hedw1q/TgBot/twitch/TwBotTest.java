@@ -24,11 +24,11 @@ public class TwBotTest {
     @Autowired
     TwBot twBot;
     @Mock
-    private ChannelGoLiveEvent channelGoLiveEvent;
+    private ChannelGoLiveEvent spyChannelGoLiveEvent;
     @Mock
-    private ChannelGoOfflineEvent channelGoOfflineEvent;
+    private ChannelGoOfflineEvent spyChannelGoOfflineEvent;
     @Mock
-    private ChannelViewerCountUpdateEvent channelViewerCountUpdateEvent;
+    private ChannelViewerCountUpdateEvent spyChannelViewerCountUpdateEvent;
 
     @BeforeEach
      void setUp() {
@@ -37,10 +37,10 @@ public class TwBotTest {
         Stream streamSpy = Mockito.mock(Stream.class);
         EventChannel channelSpy = Mockito.mock(EventChannel.class);
 
-        Mockito.when(channelGoLiveEvent.getStream()).thenReturn(streamSpy);
-        Mockito.when(channelGoOfflineEvent.getChannel()).thenReturn(channelSpy);
-        Mockito.when(channelGoLiveEvent.getChannel()).thenReturn(channelSpy);
-        Mockito.when(channelViewerCountUpdateEvent.getViewerCount()).thenReturn(500);
+        Mockito.when(spyChannelGoLiveEvent.getStream()).thenReturn(streamSpy);
+        Mockito.when(spyChannelGoOfflineEvent.getChannel()).thenReturn(channelSpy);
+        Mockito.when(spyChannelGoLiveEvent.getChannel()).thenReturn(channelSpy);
+        Mockito.when(spyChannelViewerCountUpdateEvent.getViewerCount()).thenReturn(500);
 
         Mockito.when(streamSpy.getStartedAtInstant()).thenReturn(Instant.ofEpochSecond(0));
         Mockito.when(streamSpy.getTitle()).thenReturn("Title");
@@ -52,13 +52,13 @@ public class TwBotTest {
 
     @Test
     void channelGoLiveTest() {
-        twBot.onChannelGoLive(this.channelGoLiveEvent);
+        twBot.onChannelGoLive(this.spyChannelGoLiveEvent);
     }
 
 
     @Test
     void channelGoOfflineTest() {
-        twBot.onChannelViewerCountUpdate(this.channelViewerCountUpdateEvent);
-        twBot.onChannelGoOffline(this.channelGoOfflineEvent);
+        twBot.onChannelViewerCountUpdate(this.spyChannelViewerCountUpdateEvent);
+        twBot.onChannelGoOffline(this.spyChannelGoOfflineEvent);
     }
 }

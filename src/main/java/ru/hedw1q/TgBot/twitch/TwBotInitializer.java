@@ -11,11 +11,10 @@ import java.util.Map;
  */
 @Component
 public class TwBotInitializer {
-
     private static final Map<String, String> getenv = System.getenv();
 
     @Bean
-    public TwBot createBot() {
+    public TwBot createBotHoneyramonaflowers() {
         TwitchConfiguration twitchConfiguration=new TwitchConfiguration(
                 getenv.get("twitch.oAuthToken"),
                 getenv.get("twitch.clientId"),
@@ -24,10 +23,20 @@ public class TwBotInitializer {
                 "honeyramonaflowers",
                 "Anti-FUN"
         );
-
         return TwBot.create(twitchConfiguration);
     }
 
+    @Bean
+    public TwBot createBotKrabick() {
 
-
+        TwitchConfiguration twitchConfigurationKrab=new TwitchConfiguration(
+                getenv.get("twitch.oAuthToken"),
+                getenv.get("twitch.clientId"),
+                getenv.get("twitch.clientSecret"),
+                "Pufozavr",
+                "krabick",
+                "Anti-FUN"
+        );
+        return TwBot.create(twitchConfigurationKrab);
+    }
 }

@@ -84,7 +84,7 @@ public class TwBot {
 
     void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         streamStartTime=channelGoLiveEvent.getStream().getStartedAtInstant();
-        String message = "\uD83D\uDD34 Стрим на Twitch \uD83D\uDD34 \n" +
+        String message = "❗️ "+channelGoLiveEvent.getChannel().getName()+" завел на Twitch  ❗️\n" +
                 "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
                 "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
                 "\n" +
@@ -113,6 +113,6 @@ public class TwBot {
     }
 
 //    private void onChannelMessage(ChannelMessageEvent channelMessageEvent){
-//        tgBot.sendMessageToChannel(TG_CHANNEL_ID, channelMessageEvent.getMessage());
+//        tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, channelMessageEvent.getMessage());
 //    }
 }
