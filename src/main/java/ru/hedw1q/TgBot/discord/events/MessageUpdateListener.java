@@ -1,6 +1,7 @@
 package ru.hedw1q.TgBot.discord.events;
 
 import discord4j.core.event.domain.message.MessageUpdateEvent;
+import discord4j.core.object.entity.Message;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -17,11 +18,10 @@ public class MessageUpdateListener extends MessageListener implements EventListe
 
     @Override
     public Mono<Void> execute(MessageUpdateEvent event) {
+       Message oldMessage =event.getOld().orElseThrow();
+
+
             return Mono.empty();
-//            return Mono.just(event)
-//                    .filter(MessageUpdateEvent::isContentChanged)
-//                    .flatMap(MessageUpdateEvent::getMessage)
-//                    .flatMap(super::processCommand);
 
     }
 }

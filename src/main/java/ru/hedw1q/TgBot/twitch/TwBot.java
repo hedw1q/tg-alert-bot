@@ -83,6 +83,8 @@ public class TwBot {
     }
 
     void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
+        logger.info(channelGoLiveEvent.getChannel().getName()+" alive");
+
         streamStartTime=channelGoLiveEvent.getStream().getStartedAtInstant();
         String message = "❗️ "+channelGoLiveEvent.getChannel().getName()+" завел на Twitch  ❗️\n" +
                 "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
@@ -97,10 +99,13 @@ public class TwBot {
     }
 
     void onChannelViewerCountUpdate(ChannelViewerCountUpdateEvent channelViewerCountUpdateEvent) {
+        logger.info(channelViewerCountUpdateEvent.getChannel().getName()+":new viewer count="+
+                +channelViewerCountUpdateEvent.getViewerCount());
         channelViewerCount = channelViewerCountUpdateEvent.getViewerCount();
     }
 
     void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
+        logger.info(channelGoOfflineEvent.getChannel().getName()+" offline");
         streamFinishTime=channelGoOfflineEvent.getFiredAtInstant();
         Duration streamDuration = Duration.between(streamStartTime, streamStartTime);
         String message = "⚫️ Стрим на Twitch окончен ⚫️ \n" +

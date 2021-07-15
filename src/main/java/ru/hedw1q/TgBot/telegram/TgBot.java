@@ -47,6 +47,11 @@ public class TgBot extends TelegramLongPollingCommandBot {
 //        sendTextMessageToChannel(chatId,chatId.toString());
     }
 
+    public Message updateMessage(Message oldMessage ,String newText){
+        oldMessage.setText(newText);
+        return oldMessage;
+    }
+
     public Message sendTextMessageToChannel(Long chatId, String text) {
         return setAnswer(chatId, text);
     }
