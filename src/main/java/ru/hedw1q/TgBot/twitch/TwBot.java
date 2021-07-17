@@ -11,7 +11,6 @@ import com.github.twitch4j.events.ChannelViewerCountUpdateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import ru.hedw1q.TgBot.telegram.TgBot;
 import ru.hedw1q.TgBot.twitch.config.TwitchConfiguration;
 
@@ -21,7 +20,6 @@ import java.time.Instant;
 /**
  * @author hedw1q
  */
-@Component
 public class TwBot {
     public static long TG_CHANNEL_ID = -1001537091172L;
 
