@@ -38,7 +38,7 @@ public class DsBotInitializer {
                     .subscribe();
         }
         initializeStickers();
-        logger.info("Connected to discord channel");
+        logger.info("Connected to discord channels");
         return client;
     }
 

@@ -31,7 +31,7 @@ public class TwBot {
     private TwitchChat twitchChat;
     private Instant streamStartTime;
     private Instant streamFinishTime;
-    private int channelViewerCount = 0;
+    private int channelViewerCount;
 
     public static TwBot create(TwitchConfiguration twitchConfiguration) {
         TwBot twBot = new TwBot();
@@ -61,7 +61,6 @@ public class TwBot {
                 .withEnableHelix(true)
                 .withEnableKraken(true)
                 .withChatAccount(credential)
-                .withCommandTrigger("!")
                 .build();
 
         twitchClient.getClientHelper()
@@ -106,15 +105,22 @@ public class TwBot {
 
     void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
         logger.info(channelGoOfflineEvent.getChannel().getName()+" offline");
-        streamFinishTime=channelGoOfflineEvent.getFiredAtInstant();
-        Duration streamDuration = Duration.between(streamStartTime, streamStartTime);
-        String message = "⚫️ Стрим на Twitch окончен ⚫️ \n" +
-                "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
-                "Зрителей: " + channelViewerCount + "\n" +
-                "\n" +
-                "Ссылка: https://www.twitch.tv/" + channelGoOfflineEvent.getChannel().getName();
+        try {
+            streamFinishTime=channelGoOfflineEvent.getFiredAtInstant();
+            Duration streamDuration = Duration.between(streamStartTime, streamStartTime);
+            String message = "⚫️ Стрим на Twitch окончен ⚫️ \n" +
+                    "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
+                    "Зрителей: " + channelViewerCount + "\n" +
+                    "\n" +
+                    "Ссылка: https://www.twitch.tv/" + channelGoOfflineEvent.getChannel().getName();
 
-        tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
+        }finally {
+            streamStartTime=null;
+            streamFinishTime=null;
+            channelViewerCount=0;
+            System.gc();
+        }
     }
 
 //    private void onChannelMessage(ChannelMessageEvent channelMessageEvent){

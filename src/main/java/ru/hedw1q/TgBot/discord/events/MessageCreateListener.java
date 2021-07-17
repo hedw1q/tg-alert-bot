@@ -27,7 +27,7 @@ public class MessageCreateListener extends MessageListener implements EventListe
 
     @Override
     public Mono<Void> execute(MessageCreateEvent event) {
-        if (event.getMessage().getChannelId().asLong() != DS_CHANNEL_ID) {
+        if (event.getMessage().getChannelId().asLong() != DS_CHANNEL_ID || event.getMessage().getAuthor().orElseThrow().isBot()) {
             return Mono.empty();
         }
 

@@ -38,6 +38,8 @@ public class CheckBotAliveCommand extends BotCommand {
 
             absSender.execute(sendMessage);
             absSender.execute(sendSticker);
+
+            System.gc();
         } catch (TelegramApiException e) {
             logger.error(ExceptionUtils.getFullStackTrace(e));
         }
