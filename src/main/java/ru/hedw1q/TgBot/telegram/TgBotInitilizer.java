@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ru.hedw1q.TgBot.telegram.commands.CheckBotAliveCommand;
+import ru.hedw1q.TgBot.telegram.commands.CheckStreamStatusCommand;
 
 /**
  * @author hedw1q
@@ -25,7 +25,7 @@ public class TgBotInitilizer {
         try{
             new TelegramBotsApi(DefaultBotSession.class).registerBot(tgBot);
 
-            tgBot.register(new CheckBotAliveCommand("alive", "Ты живой там?"));
+            tgBot.register(new CheckStreamStatusCommand("status", "Статус стрима"));
             logger.info("Connected to telegram");
         } catch (TelegramApiException ex){
             logger.error(ex.getMessage());

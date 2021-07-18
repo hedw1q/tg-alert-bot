@@ -13,7 +13,7 @@ import java.util.Map;
 public class TwBotInitializer {
     private static final Map<String, String> getenv = System.getenv();
 
-    @Bean
+    @Bean(name="honeyramonaflowers")
     public TwBot createBotHoneyramonaflowers() {
         TwitchConfiguration twitchConfiguration=new TwitchConfiguration(
                 getenv.get("twitch.oAuthToken"),
@@ -26,7 +26,7 @@ public class TwBotInitializer {
         return TwBot.create(twitchConfiguration);
     }
 
-    @Bean
+    @Bean(name="krabick")
     public TwBot createBotKrabick() {
 
         TwitchConfiguration twitchConfigurationKrab=new TwitchConfiguration(

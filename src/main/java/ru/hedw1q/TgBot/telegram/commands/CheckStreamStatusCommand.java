@@ -16,11 +16,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 /**
  * @author hedw1q
  */
-public class CheckBotAliveCommand extends BotCommand {
+public class CheckStreamStatusCommand extends BotCommand {
 
-    private static final Logger logger = LoggerFactory.getLogger(CheckBotAliveCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(CheckStreamStatusCommand.class);
 
-    public CheckBotAliveCommand(String commandIdentifier, String description) {
+    public CheckStreamStatusCommand(String commandIdentifier, String description) {
         super(commandIdentifier, description);
     }
 

@@ -8,6 +8,7 @@ import com.github.twitch4j.chat.TwitchChat;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import com.github.twitch4j.events.ChannelViewerCountUpdateEvent;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,32 +81,40 @@ public class TwBot {
     }
 
     void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
-        logger.info(channelGoLiveEvent.getChannel().getName()+" alive");
+        streamStartTime = channelGoLiveEvent.getStream().getStartedAtInstant();
+        logger.info(channelGoLiveEvent.getChannel().getName() + " alive");
 
-        streamStartTime=channelGoLiveEvent.getStream().getStartedAtInstant();
-        String message = "❗️ "+channelGoLiveEvent.getChannel().getName()+" завел на Twitch  ❗️\n" +
-                "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
-                "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
-                "\n" +
-                "Ссылка: https://www.twitch.tv/" + channelGoLiveEvent.getChannel().getName();
+        try {
+            String message = "❗️ " + channelGoLiveEvent.getChannel().getName() + " завел на Twitch  ❗️\n" +
+                    "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
+                    "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
+                    "\n" +
+                    "Ссылка: https://www.twitch.tv/" + channelGoLiveEvent.getChannel().getName();
 
-        String thumbnailUrl = channelGoLiveEvent.getStream().getThumbnailUrl();
+            String thumbnailUrl = channelGoLiveEvent.getStream().getThumbnailUrl();
 
-        tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
-        //tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
+            tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
+        } catch (Exception e) {
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(e));
+       //     logger.error(ExceptionUtils.getFullStackTrace(e));
+        } finally {
+            streamFinishTime = null;
+            channelViewerCount = 0;
+        }
     }
 
     void onChannelViewerCountUpdate(ChannelViewerCountUpdateEvent channelViewerCountUpdateEvent) {
-        logger.info(channelViewerCountUpdateEvent.getChannel().getName()+":new viewer count="+
+        logger.info(channelViewerCountUpdateEvent.getChannel().getName() + ":new viewer count=" +
                 +channelViewerCountUpdateEvent.getViewerCount());
+        logger.info("stream start time" + streamStartTime.toString());
         channelViewerCount = channelViewerCountUpdateEvent.getViewerCount();
     }
 
     void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
-        logger.info(channelGoOfflineEvent.getChannel().getName()+" offline");
+        logger.info(channelGoOfflineEvent.getChannel().getName() + " offline");
         try {
-            streamFinishTime=channelGoOfflineEvent.getFiredAtInstant();
-            Duration streamDuration = Duration.between(streamStartTime, streamStartTime);
+            streamFinishTime = channelGoOfflineEvent.getFiredAtInstant();
+            Duration streamDuration = Duration.between(streamStartTime, streamFinishTime);
             String message = "⚫️ Стрим на Twitch окончен ⚫️ \n" +
                     "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
                     "Зрителей: " + channelViewerCount + "\n" +
@@ -113,10 +122,14 @@ public class TwBot {
                     "Ссылка: https://www.twitch.tv/" + channelGoOfflineEvent.getChannel().getName();
 
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
-        }finally {
-            streamStartTime=null;
-            streamFinishTime=null;
-            channelViewerCount=0;
+
+        } catch (Exception e) {
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(e));
+            //  logger.error(ExceptionUtils.getFullStackTrace(e));
+        } finally {
+            streamStartTime = null;
+            streamFinishTime = null;
+            channelViewerCount = 0;
             System.gc();
         }
     }
