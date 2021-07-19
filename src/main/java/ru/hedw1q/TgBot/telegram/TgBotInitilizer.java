@@ -15,10 +15,7 @@ import ru.hedw1q.TgBot.telegram.commands.CheckStreamStatusCommand;
 @Component
 public class TgBotInitilizer {
 
-    private TgBot tgBot;
-    private TelegramBotsApi telegramBotsApi;
     private static final Logger logger = LoggerFactory.getLogger(TgBotInitilizer.class);
-
 
     @Autowired
     public TgBotInitilizer(TgBot tgBot) throws TelegramApiException{

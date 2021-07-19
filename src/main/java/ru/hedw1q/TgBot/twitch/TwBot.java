@@ -27,6 +27,7 @@ public class TwBot {
     @Autowired
     private TgBot tgBot;
     private static final Logger logger = LoggerFactory.getLogger(TwBot.class);
+    private TwitchClient twitchClient;
     private TwitchChat twitchChat;
     private Instant streamStartTime;
     private Instant streamFinishTime;
@@ -53,12 +54,11 @@ public class TwBot {
 
         OAuth2Credential credential = new OAuth2Credential("twitch", twitchConfiguration.getOAuthToken());
 
-        TwitchClient twitchClient = TwitchClientBuilder.builder()
+         twitchClient = TwitchClientBuilder.builder()
                 .withClientId(twitchConfiguration.getClientId())
                 .withClientSecret(twitchConfiguration.getClientSecret())
                 .withEnableChat(true)
                 .withEnableHelix(true)
-                .withEnableKraken(true)
                 .withChatAccount(credential)
                 .build();
 
@@ -68,6 +68,9 @@ public class TwBot {
         return twitchClient;
     }
 
+    void getStreamInfo(){
+      // return twitchClient.getClientHelper().getCachedInformation(channelId).orElseThrow().getIsLive();
+    }
 
     void registerEventHandlers(EventManager eventManager) {
         eventManager
@@ -83,7 +86,7 @@ public class TwBot {
     void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         streamStartTime = channelGoLiveEvent.getStream().getStartedAtInstant();
         logger.info(channelGoLiveEvent.getChannel().getName() + " alive");
-
+        tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, channelGoLiveEvent.getStream().getId());
         try {
             String message = "❗️ " + channelGoLiveEvent.getChannel().getName() + " завел на Twitch  ❗️\n" +
                     "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
@@ -91,7 +94,7 @@ public class TwBot {
                     "\n" +
                     "Ссылка: https://www.twitch.tv/" + channelGoLiveEvent.getChannel().getName();
 
-            String thumbnailUrl = channelGoLiveEvent.getStream().getThumbnailUrl();
+            String thumbnailUrl = channelGoLiveEvent.getStream().getThumbnailUrl(320,180);
 
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
         } catch (Exception e) {
@@ -104,9 +107,6 @@ public class TwBot {
     }
 
     void onChannelViewerCountUpdate(ChannelViewerCountUpdateEvent channelViewerCountUpdateEvent) {
-        logger.info(channelViewerCountUpdateEvent.getChannel().getName() + ":new viewer count=" +
-                +channelViewerCountUpdateEvent.getViewerCount());
-        logger.info("stream start time" + streamStartTime.toString());
         channelViewerCount = channelViewerCountUpdateEvent.getViewerCount();
     }
 
@@ -130,7 +130,6 @@ public class TwBot {
             streamStartTime = null;
             streamFinishTime = null;
             channelViewerCount = 0;
-            System.gc();
         }
     }
 
