@@ -111,10 +111,15 @@ public class TwBot {
     }
 
     void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
+        Duration streamDuration;
         logger.info(channelGoOfflineEvent.getChannel().getName() + " offline");
-        try {
+        try{
             streamFinishTime = channelGoOfflineEvent.getFiredAtInstant();
-            Duration streamDuration = Duration.between(streamStartTime, streamFinishTime);
+            streamDuration = Duration.between(streamStartTime, streamFinishTime);
+        }catch (NullPointerException e){
+             streamDuration=Duration.ZERO;
+        }
+        try {
             String message = "⚫️ Стрим на Twitch окончен ⚫️ \n" +
                     "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
                     "Зрителей: " + channelViewerCount + "\n" +
@@ -122,7 +127,6 @@ public class TwBot {
                     "Ссылка: https://www.twitch.tv/" + channelGoOfflineEvent.getChannel().getName();
 
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
-
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(e));
             //  logger.error(ExceptionUtils.getFullStackTrace(e));
