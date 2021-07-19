@@ -86,7 +86,6 @@ public class TwBot {
     void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         streamStartTime = channelGoLiveEvent.getStream().getStartedAtInstant();
         logger.info(channelGoLiveEvent.getChannel().getName() + " alive");
-        tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, channelGoLiveEvent.getStream().getId());
         try {
             String message = "❗️ " + channelGoLiveEvent.getChannel().getName() + " завел на Twitch  ❗️\n" +
                     "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +

@@ -18,6 +18,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Map;
@@ -65,16 +66,17 @@ public class TgBot extends TelegramLongPollingCommandBot {
             String contentType = conn.getContentType().trim().split(";")[0];
 //           final  Pattern pattern = Pattern.compile("<@.+>");
 //            final Matcher matcher = pattern.matcher(contentType);
-            File file = new File(urlObject.getFile());
-            FileUtils.copyInputStreamToFile(conn.getInputStream(), file);
+       //     File file = new File(urlObject.getFile());
+           // FileUtils.copyInputStreamToFile(conn.getInputStream(), file);
+
                 switch (contentType) {
                     case "image/png":
                     case "image/bmp":
                     case "image/tiff":
                     case "image/jpeg":
-                        return sendImageMessageToChannel(chatId, file, text);
+                        return sendImageMessageToChannel(chatId, conn.getInputStream(), text);
                     case "image/gif":
-                        return sendAnimationMessageToChannel(chatId, file, text);
+                        return sendAnimationMessageToChannel(chatId, conn.getInputStream(), text);
                     default:
                         return null;
                 }
@@ -85,17 +87,17 @@ public class TgBot extends TelegramLongPollingCommandBot {
         }
     }
 
-    private Message sendImageMessageToChannel(Long chatId, File file, String text) throws TelegramApiException {
+    private Message sendImageMessageToChannel(Long chatId, InputStream inputStream, String text) throws TelegramApiException {
         SendPhoto msg = new SendPhoto();
-        msg.setPhoto(new InputFile(file));
+        msg.setPhoto(new InputFile(inputStream, "image"));
         msg.setChatId(chatId.toString());
         msg.setCaption(text);
        return execute(msg);
     }
 
-    private Message sendAnimationMessageToChannel(Long chatId, File file, String text) throws TelegramApiException {
+    private Message sendAnimationMessageToChannel(Long chatId, InputStream inputStream, String text) throws TelegramApiException {
         SendAnimation msg = new SendAnimation();
-        msg.setAnimation(new InputFile(file));
+        msg.setAnimation(new InputFile(inputStream, "gif"));
         msg.setChatId(chatId.toString());
         msg.setCaption(text);
         return execute(msg);

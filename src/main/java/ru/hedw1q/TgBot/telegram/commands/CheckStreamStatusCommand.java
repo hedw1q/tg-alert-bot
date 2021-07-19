@@ -26,7 +26,7 @@ public class CheckStreamStatusCommand extends BotCommand {
     @Autowired
     @Qualifier("krabick")
     TwBot krabickTwitchBot;
-
+//channelId krabick=42903192429
     public CheckStreamStatusCommand(String commandIdentifier, String description) {
         super(commandIdentifier, description);
     }
