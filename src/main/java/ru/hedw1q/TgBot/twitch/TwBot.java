@@ -57,7 +57,7 @@ public class TwBot {
 
         OAuth2Credential credential = new OAuth2Credential("twitch", twitchConfiguration.getOAuthToken());
 
-         twitchClient = TwitchClientBuilder.builder()
+        twitchClient = TwitchClientBuilder.builder()
                 .withClientId(twitchConfiguration.getClientId())
                 .withClientSecret(twitchConfiguration.getClientSecret())
                 .withEnableChat(true)
@@ -78,10 +78,12 @@ public class TwBot {
         return twitchClient;
     }
 
-    public String getStreamIsAlive(){
-       if(twitchClient.getClientHelper().getCachedInformation(channelId).orElseThrow().getIsLive())
-           return "live";
-       return "offline";
+    @Deprecated
+    public String getStreamIsAlive() {
+        if (twitchClient.getHelix().getStreams(null, "", "", null, null, null, Arrays.asList(channelId), null)
+                .execute().getStreams().get(0).getType().equals("live"))
+            return "live";
+        return "offline";
     }
 
     void registerEventHandlers(EventManager eventManager) {
@@ -104,12 +106,12 @@ public class TwBot {
                     "\n" +
                     "Ссылка: https://www.twitch.tv/" + channelGoLiveEvent.getChannel().getName();
 
-            String thumbnailUrl = channelGoLiveEvent.getStream().getThumbnailUrl(320,180);
+            String thumbnailUrl = channelGoLiveEvent.getStream().getThumbnailUrl(320, 180);
 
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(e));
-       //     logger.error(ExceptionUtils.getFullStackTrace(e));
+            //     logger.error(ExceptionUtils.getFullStackTrace(e));
         } finally {
             streamFinishTime = null;
             channelViewerCount = 0;
@@ -122,11 +124,11 @@ public class TwBot {
 
     void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
         Duration streamDuration;
-        try{
+        try {
             streamFinishTime = channelGoOfflineEvent.getFiredAtInstant();
             streamDuration = Duration.between(streamStartTime, streamFinishTime);
-        }catch (NullPointerException e){
-             streamDuration=Duration.ZERO;
+        } catch (NullPointerException e) {
+            streamDuration = Duration.ZERO;
         }
         try {
             String message = "⚫️ Стрим на Twitch окончен ⚫️ \n" +

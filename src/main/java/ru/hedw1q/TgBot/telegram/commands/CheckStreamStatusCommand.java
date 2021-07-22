@@ -23,13 +23,6 @@ public class CheckStreamStatusCommand extends BotCommand {
 
     private static final Logger logger = LoggerFactory.getLogger(CheckStreamStatusCommand.class);
 
-    @Autowired
-    @Qualifier("Krabick")
-    TwBot krabickTwitchBot;
-    @Autowired
-    @Qualifier("honeyramonaflowers")
-    TwBot ramonaTwitchBot;
-
     public CheckStreamStatusCommand(String commandIdentifier, String description) {
         super(commandIdentifier, description);
     }
@@ -39,8 +32,7 @@ public class CheckStreamStatusCommand extends BotCommand {
 
         try {
             SendMessage sendMessage = new SendMessage();
-             String msg = String.format(("Krabick: %s\n" +
-                    "honeyramonaflowers: %s"), krabickTwitchBot.getStreamIsAlive(), ramonaTwitchBot.getStreamIsAlive());
+             String msg = "test";
 
             sendMessage.setText(msg);
             sendMessage.setChatId(chat.getId().toString());
