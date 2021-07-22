@@ -26,7 +26,7 @@ public class TwBotInitializer {
         return TwBot.create(twitchConfiguration);
     }
 
-    @Bean(name="krabick")
+    @Bean(name="Krabick")
     public TwBot createBotKrabick() {
 
         TwitchConfiguration twitchConfigurationKrab=new TwitchConfiguration(
@@ -34,7 +34,7 @@ public class TwBotInitializer {
                 getenv.get("twitch.clientId"),
                 getenv.get("twitch.clientSecret"),
                 "Pufozavr",
-                "krabick",
+                "Krabick",
                 "Anti-FUN"
         );
         return TwBot.create(twitchConfigurationKrab);

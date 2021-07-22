@@ -24,9 +24,12 @@ public class CheckStreamStatusCommand extends BotCommand {
     private static final Logger logger = LoggerFactory.getLogger(CheckStreamStatusCommand.class);
 
     @Autowired
-    @Qualifier("krabick")
+    @Qualifier("Krabick")
     TwBot krabickTwitchBot;
-//channelId krabick=42903192429
+    @Autowired
+    @Qualifier("honeyramonaflowers")
+    TwBot ramonaTwitchBot;
+
     public CheckStreamStatusCommand(String commandIdentifier, String description) {
         super(commandIdentifier, description);
     }
@@ -34,17 +37,15 @@ public class CheckStreamStatusCommand extends BotCommand {
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
 
-        try{
-            SendMessage sendMessage=new SendMessage();
-            sendMessage.setText("Да живой я, ацтань");
+        try {
+            SendMessage sendMessage = new SendMessage();
+             String msg = String.format(("Krabick: %s\n" +
+                    "honeyramonaflowers: %s"), krabickTwitchBot.getStreamIsAlive(), ramonaTwitchBot.getStreamIsAlive());
+
+            sendMessage.setText(msg);
             sendMessage.setChatId(chat.getId().toString());
 
-            SendSticker sendSticker=new SendSticker();
-            sendSticker.setSticker(new InputFile("CAACAgIAAxkBAAEClDdg7zJxETfRjQK8Y66XZraozz1-8gACFgADx8k_FtZi2DrThc88IAQ"));
-            sendSticker.setChatId(chat.getId().toString());
-
             absSender.execute(sendMessage);
-            absSender.execute(sendSticker);
         } catch (TelegramApiException e) {
             logger.error(ExceptionUtils.getFullStackTrace(e));
         }

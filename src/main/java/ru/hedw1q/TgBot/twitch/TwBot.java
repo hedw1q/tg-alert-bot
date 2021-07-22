@@ -8,6 +8,7 @@ import com.github.twitch4j.chat.TwitchChat;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import com.github.twitch4j.events.ChannelViewerCountUpdateEvent;
+import com.github.twitch4j.helix.domain.UserList;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import ru.hedw1q.TgBot.twitch.config.TwitchConfiguration;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 
 /**
  * @author hedw1q
@@ -32,6 +34,7 @@ public class TwBot {
     private Instant streamStartTime;
     private Instant streamFinishTime;
     private int channelViewerCount;
+    private String channelId;
 
     public static TwBot create(TwitchConfiguration twitchConfiguration) {
         TwBot twBot = new TwBot();
@@ -65,11 +68,20 @@ public class TwBot {
         twitchClient.getClientHelper()
                 .enableStreamEventListener(twitchConfiguration.getChannelName());
 
+        channelId = twitchClient.getHelix().getUsers(null, null, Arrays.asList(twitchConfiguration.getChannelName()))
+                .execute()
+                .getUsers()
+                .get(0)
+                .getId();
+
+
         return twitchClient;
     }
 
-    void getStreamInfo(){
-      // return twitchClient.getClientHelper().getCachedInformation(channelId).orElseThrow().getIsLive();
+    public String getStreamIsAlive(){
+       if(twitchClient.getClientHelper().getCachedInformation(channelId).orElseThrow().getIsLive())
+           return "live";
+       return "offline";
     }
 
     void registerEventHandlers(EventManager eventManager) {
@@ -85,9 +97,8 @@ public class TwBot {
 
     void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         streamStartTime = channelGoLiveEvent.getStream().getStartedAtInstant();
-        logger.info(channelGoLiveEvent.getChannel().getName() + " alive");
         try {
-            String message = "❗️ " + channelGoLiveEvent.getChannel().getName() + " завел на Twitch  ❗️\n" +
+            String message = "❗️Поток от " + channelGoLiveEvent.getChannel().getName() + " на Twitch  ❗️\n" +
                     "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
                     "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
                     "\n" +
@@ -111,7 +122,6 @@ public class TwBot {
 
     void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
         Duration streamDuration;
-        logger.info(channelGoOfflineEvent.getChannel().getName() + " offline");
         try{
             streamFinishTime = channelGoOfflineEvent.getFiredAtInstant();
             streamDuration = Duration.between(streamStartTime, streamFinishTime);
