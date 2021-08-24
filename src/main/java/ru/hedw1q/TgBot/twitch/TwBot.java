@@ -5,6 +5,7 @@ import com.github.philippheuer.events4j.core.EventManager;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.chat.TwitchChat;
+import com.github.twitch4j.events.ChannelChangeGameEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import com.github.twitch4j.events.ChannelViewerCountUpdateEvent;
@@ -93,6 +94,8 @@ public class TwBot {
                 onEvent(ChannelGoOfflineEvent.class, this::onChannelGoOffline);
         eventManager.
                 onEvent(ChannelViewerCountUpdateEvent.class, this::onChannelViewerCountUpdate);
+        eventManager.
+                onEvent(ChannelChangeGameEvent.class, this::onChannelChangeGame);
 //        eventManager
 //                .onEvent(ChannelMessageEvent.class, this::onChannelMessage);
     }
@@ -145,6 +148,22 @@ public class TwBot {
             streamStartTime = null;
             streamFinishTime = null;
             channelViewerCount = 0;
+        }
+    }
+
+    void onChannelChangeGame(ChannelChangeGameEvent channelChangeGameEvent) {
+        try {
+            String message = "❗️"+channelChangeGameEvent.getChannel().getName() + " сменил игру на стриме  ❗️\n" +
+                    "Категория: " + channelChangeGameEvent.getStream().getGameName() + "\n" +
+                    "Зрителей: " + channelChangeGameEvent.getStream().getViewerCount() + "\n" +
+                    "\n" +
+                    "Ссылка: https://www.twitch.tv/" + channelChangeGameEvent.getChannel().getName();
+
+            String thumbnailUrl = channelChangeGameEvent.getStream().getThumbnailUrl(320, 180);
+
+            tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
+        } catch (Exception e) {
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(e));
         }
     }
 
