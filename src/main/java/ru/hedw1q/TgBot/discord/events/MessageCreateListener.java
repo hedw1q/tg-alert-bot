@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 import ru.hedw1q.TgBot.discord.entities.DiscordMessage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static ru.hedw1q.TgBot.discord.DsBotInitializer.stickerMap;
@@ -18,7 +19,7 @@ import static ru.hedw1q.TgBot.discord.DsBotInitializer.stickerMap;
 public class MessageCreateListener extends MessageListener implements EventListener<MessageCreateEvent> {
 
     static final long TG_CHANNEL_ID = -1001537091172L;
-    static final long DS_CHANNEL_ID = 552454831122546699L;
+    static final List<Long> DS_CHANNEL_IDS = Arrays.asList(552454831122546699L, 860904072306229288L);
 
     @Override
     public Class<MessageCreateEvent> getEventType() {
@@ -27,9 +28,10 @@ public class MessageCreateListener extends MessageListener implements EventListe
 
     @Override
     public Mono<Void> execute(MessageCreateEvent event) {
-        if (event.getMessage().getChannelId().asLong() != 860904072306229288L || event.getMessage().getAuthor().orElseThrow().isBot()) {
+        if (!validateMessage(event)) {
             return Mono.empty();
         }
+
 
         DiscordMessage discordMessage = new DiscordMessage(event.getMessage().getContent());
         discordMessage.formatOutputText(stickerMap);
@@ -45,6 +47,13 @@ public class MessageCreateListener extends MessageListener implements EventListe
         tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, discordMessage.getMessageText());
 
         return Mono.empty();
+    }
+
+    private boolean validateMessage(MessageCreateEvent event) {
+        if (!DS_CHANNEL_IDS.contains(event.getMessage().getChannelId().asLong())
+                || event.getMessage().getAuthor().orElseThrow().isBot())
+            return false;
+        return true;
     }
 
 
