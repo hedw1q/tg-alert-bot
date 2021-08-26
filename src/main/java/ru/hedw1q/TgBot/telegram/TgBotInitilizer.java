@@ -22,7 +22,7 @@ public class TgBotInitilizer {
         try{
             new TelegramBotsApi(DefaultBotSession.class).registerBot(tgBot);
 
-            tgBot.register(new CheckStreamStatusCommand("status", "Статус стрима"));
+        //    tgBot.register(new CheckStreamStatusCommand("status", "Статус стрима"));
             logger.info("Connected to telegram");
         } catch (TelegramApiException ex){
             logger.error(ex.getMessage());

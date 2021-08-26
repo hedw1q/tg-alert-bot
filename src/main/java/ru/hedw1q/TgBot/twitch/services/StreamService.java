@@ -1,7 +1,10 @@
 package ru.hedw1q.TgBot.twitch.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.hedw1q.TgBot.twitch.TwBot;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
 import ru.hedw1q.TgBot.twitch.repositories.StreamRepository;
 
@@ -21,9 +24,12 @@ public class StreamService {
     EntityManager em;
     @Autowired
     private StreamRepository streamRepository;
+    private static final Logger logger = LoggerFactory.getLogger(StreamService.class);
+
 
     public void createNewStream(Instant startTime, String channelName){
-        streamRepository.save(new Stream(channelName, LocalDateTime.ofInstant(startTime, ZoneOffset.UTC)));
+        Stream stream=new Stream(channelName, LocalDateTime.ofInstant(startTime, ZoneOffset.UTC));
+        streamRepository.save(stream);
     }
 
     public Stream getLastStreamByChannelName(String channelName) throws SQLException {

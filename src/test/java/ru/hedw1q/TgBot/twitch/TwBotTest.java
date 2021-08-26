@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Instant;
@@ -22,6 +23,7 @@ import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
 @SpringBootTest
 public class TwBotTest {
     @Autowired
+    @Qualifier("honeyramonaflowers")
     TwBot twBot;
     @Mock
     private ChannelGoLiveEvent spyChannelGoLiveEvent;

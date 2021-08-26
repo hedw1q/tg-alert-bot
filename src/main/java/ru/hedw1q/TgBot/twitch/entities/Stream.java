@@ -2,8 +2,11 @@ package ru.hedw1q.TgBot.twitch.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -16,22 +19,27 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "STREAMS")
+@ToString
 public class Stream extends BaseEntity {
-
-   public Stream(String channelName,LocalDateTime streamStartTime){
-       this.channelName=channelName;
-       this.streamStartTime=streamStartTime;
-       this.streamStatus="LIVE";
+    public Stream() {
     }
+
+    public Stream(String channelName, LocalDateTime streamStartTime) {
+        this.channelName = channelName;
+        this.streamStartTime = streamStartTime;
+        this.streamStatus = StreamStatus.LIVE;
+    }
+
     @NotNull
     @Getter
     @Setter
     private String channelName;
 
-   @Getter
-   @Setter
-   @NotBlank
-   private String streamStatus;
+    @Getter
+    @Setter
+    @NotBlank
+    @Enumerated(EnumType.STRING)
+    private StreamStatus streamStatus;
 
     @NotNull
     @Getter

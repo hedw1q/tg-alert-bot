@@ -81,8 +81,7 @@ public class TgBot extends TelegramLongPollingCommandBot {
                         return null;
                 }
         } catch (TelegramApiException | IOException e) {
-            sendTextMessageToChannel(chatId, ExceptionUtils.getFullStackTrace(e));
-            //logger.error(ExceptionUtils.getFullStackTrace(e));
+            logger.error(ExceptionUtils.getFullStackTrace(e));
             return null;
         }
     }
