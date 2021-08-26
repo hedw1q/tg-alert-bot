@@ -16,7 +16,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.hedw1q.TgBot.telegram.TgBot;
 import ru.hedw1q.TgBot.twitch.config.TwitchConfiguration;
+import ru.hedw1q.TgBot.twitch.entities.Stream;
+import ru.hedw1q.TgBot.twitch.services.StreamService;
 
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
@@ -29,6 +32,8 @@ public class TwBot {
 
     @Autowired
     private TgBot tgBot;
+    @Autowired
+    StreamService streamService;
     private static final Logger logger = LoggerFactory.getLogger(TwBot.class);
     private TwitchClient twitchClient;
     private TwitchChat twitchChat;
@@ -112,10 +117,13 @@ public class TwBot {
             String thumbnailUrl = channelGoLiveEvent.getStream().getThumbnailUrl(320, 180);
 
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
+
+            streamService.createNewStream(streamStartTime,channelGoLiveEvent.getChannel().getName());
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(e));
             //     logger.error(ExceptionUtils.getFullStackTrace(e));
         } finally {
+            streamStartTime=null;
             streamFinishTime = null;
             channelViewerCount = 0;
         }
@@ -127,10 +135,13 @@ public class TwBot {
 
     void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
         Duration streamDuration;
+        Integer streamId=null;
         try {
+            Stream stream=streamService.getLastStreamByChannelName(channelGoOfflineEvent.getChannel().getName());
+            streamId=stream.getId();
             streamFinishTime = channelGoOfflineEvent.getFiredAtInstant();
-            streamDuration = Duration.between(streamStartTime, streamFinishTime);
-        } catch (NullPointerException e) {
+            streamDuration = Duration.between(stream.getStreamStartTime(), streamFinishTime);
+        } catch (NullPointerException | SQLException e) {
             streamDuration = Duration.ZERO;
         }
         try {
@@ -141,9 +152,9 @@ public class TwBot {
                     "Ссылка: https://www.twitch.tv/" + channelGoOfflineEvent.getChannel().getName();
 
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
+            streamService.setStreamOfflineById(streamFinishTime, streamId);
         } catch (Exception e) {
-            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(e));
-            //  logger.error(ExceptionUtils.getFullStackTrace(e));
+              logger.error(ExceptionUtils.getFullStackTrace(e));
         } finally {
             streamStartTime = null;
             streamFinishTime = null;

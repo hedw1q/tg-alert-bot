@@ -50,10 +50,9 @@ public class MessageCreateListener extends MessageListener implements EventListe
     }
 
     private boolean validateMessage(MessageCreateEvent event) {
-        logger.info(event.getMessage().getAuthor().orElseThrow().getUsername());
         if (!DS_CHANNEL_IDS.contains(event.getMessage().getChannelId().asLong())
                 || event.getMessage().getAuthor().orElseThrow().isBot()
-                || event.getMessage().getAuthor().orElseThrow().getUsername()!="hedw1q")
+                || !event.getMessage().getAuthor().orElseThrow().getUsername().trim().equals("hedw1q"))
             return false;
         return true;
     }
