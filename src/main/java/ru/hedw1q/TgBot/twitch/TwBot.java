@@ -138,6 +138,7 @@ public class TwBot {
         Integer streamId=null;
         try {
             Stream stream=streamService.getLastStreamByChannelName(channelGoOfflineEvent.getChannel().getName());
+            logger.info(stream.toString());
             streamId=stream.getId();
             streamFinishTime = channelGoOfflineEvent.getFiredAtInstant();
             streamDuration = Duration.between(stream.getStreamStartTime(), streamFinishTime);
@@ -166,9 +167,7 @@ public class TwBot {
         try {
             String message = "❗️"+channelChangeGameEvent.getChannel().getName() + " сменил игру на стриме  ❗️\n" +
                     "Категория: " + channelChangeGameEvent.getStream().getGameName() + "\n" +
-                    "Зрителей: " + channelChangeGameEvent.getStream().getViewerCount() + "\n" +
-                    "\n" +
-                    "Ссылка: https://www.twitch.tv/" + channelChangeGameEvent.getChannel().getName();
+                    "Зрителей: " + channelChangeGameEvent.getStream().getViewerCount();
 
             String thumbnailUrl = channelChangeGameEvent.getStream().getThumbnailUrl(320, 180);
 
