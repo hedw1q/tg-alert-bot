@@ -20,9 +20,9 @@ public interface StreamRepository extends JpaRepository<Stream, Integer> {
             "id=(SELECT max(id) FROM streams where channel_name=:name)", nativeQuery = true)
     Stream findCurrentStreamByChannelName(@Param("name") String channelName);
 
-    @Query("UPDATE streams s " +
+    @Query(value="UPDATE streams s " +
             "SET s.stream_finish_time=:time, s.stream_status='OFFLINE' " +
-            "WHERE id=:id")
+            "WHERE id=:id", nativeQuery = true)
     @Modifying
     void updateStreamSetOfflineById(@Param("time") LocalDateTime streamFinishTime, @Param("id") Integer streamId);
 }
