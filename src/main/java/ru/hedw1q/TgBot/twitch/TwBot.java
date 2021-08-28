@@ -170,7 +170,7 @@ public class TwBot {
                     "Категория: " + channelChangeGameEvent.getStream().getGameName() + "\n" +
                     "Зрителей: " + channelChangeGameEvent.getStream().getViewerCount();
 
-            String thumbnailUrl = channelChangeGameEvent.getStream().getThumbnailUrl(320, 180);
+            String thumbnailUrl = channelChangeGameEvent.getStream().getThumbnailUrl(1600, 900);
 
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
         } catch (Exception e) {
