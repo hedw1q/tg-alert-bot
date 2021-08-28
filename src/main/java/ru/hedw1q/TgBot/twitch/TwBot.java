@@ -114,7 +114,7 @@ public class TwBot {
                     "\n" +
                     "Ссылка: https://www.twitch.tv/" + channelGoLiveEvent.getChannel().getName();
 
-            String thumbnailUrl = channelGoLiveEvent.getStream().getThumbnailUrl(320, 180);
+            String thumbnailUrl = channelGoLiveEvent.getStream().getThumbnailUrl(1600, 900);
 
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
 
@@ -144,6 +144,7 @@ public class TwBot {
             streamDuration = Duration.between(stream.getStreamStartTime(), streamFinishTime);
         } catch (NullPointerException | SQLException e) {
             streamDuration = Duration.ZERO;
+            logger.error(ExceptionUtils.getFullStackTrace(e));
         }
         try {
             String message = "⚫️ Стрим на Twitch окончен ⚫️ \n" +

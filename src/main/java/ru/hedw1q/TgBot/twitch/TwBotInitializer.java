@@ -26,7 +26,7 @@ public class TwBotInitializer {
         return TwBot.create(twitchConfiguration);
     }
 
-    @Bean(name="Krabick")
+    @Bean(name="krabick")
     public TwBot createBotKrabick() {
         TwitchConfiguration twitchConfigurationKrab=new TwitchConfiguration(
                 getenv.get("twitch.oAuthToken"),

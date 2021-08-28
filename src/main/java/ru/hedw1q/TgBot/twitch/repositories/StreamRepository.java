@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 /**
@@ -20,9 +21,10 @@ public interface StreamRepository extends JpaRepository<Stream, Integer> {
             "id=(SELECT max(id) FROM streams where channel_name=:name)", nativeQuery = true)
     Stream findCurrentStreamByChannelName(@Param("name") String channelName);
 
-    @Query(value="UPDATE streams s " +
-            "SET s.stream_finish_time=:time, s.stream_status='OFFLINE' " +
+    @Query(value="UPDATE streams " +
+            "SET stream_finish_time=:time, stream_status='OFFLINE' " +
             "WHERE id=:id", nativeQuery = true)
     @Modifying
+    @Transactional
     void updateStreamSetOfflineById(@Param("time") LocalDateTime streamFinishTime, @Param("id") Integer streamId);
 }

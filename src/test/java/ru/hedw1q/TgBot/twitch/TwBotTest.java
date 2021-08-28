@@ -12,7 +12,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.hedw1q.TgBot.twitch.services.StreamService;
 
+import java.sql.SQLException;
 import java.time.Instant;
 
 import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
@@ -23,8 +25,10 @@ import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
 @SpringBootTest
 public class TwBotTest {
     @Autowired
-    @Qualifier("honeyramonaflowers")
+    @Qualifier("krabick")
     TwBot twBot;
+    @Autowired
+    StreamService streamService;
     @Mock
     private ChannelGoLiveEvent spyChannelGoLiveEvent;
     @Mock
@@ -48,7 +52,7 @@ public class TwBotTest {
         Mockito.when(streamSpy.getTitle()).thenReturn("Title");
         Mockito.when(streamSpy.getGameName()).thenReturn("GameName");
         Mockito.when(channelSpy.getName()).thenReturn("ChannelName");
-        Mockito.when(streamSpy.getThumbnailUrl()).thenReturn("https://static-cdn.jtvnw.net/previews-ttv/live_user_timofey-320x180.jpg");
+        Mockito.when(streamSpy.getThumbnailUrl()).thenReturn("https://static-cdn.jtvnw.net/previews-ttv/live_user_timofey-1600x900.jpg");
     }
 
 
@@ -59,8 +63,12 @@ public class TwBotTest {
 
 
     @Test
-    void channelGoOfflineTest() {
+    void channelGoOfflineTest() throws SQLException {
         twBot.onChannelViewerCountUpdate(this.spyChannelViewerCountUpdateEvent);
-        twBot.onChannelGoOffline(this.spyChannelGoOfflineEvent);
+        ru.hedw1q.TgBot.twitch.entities.Stream stream=streamService.getLastStreamByChannelName("krabick");
+        System.out.println(stream);
+        streamService.setStreamOfflineById(Instant.now(), stream.getId());
+
+        // twBot.onChannelGoOffline(this.spyChannelGoOfflineEvent);
     }
 }
