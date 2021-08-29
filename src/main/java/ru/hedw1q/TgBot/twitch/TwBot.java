@@ -105,10 +105,17 @@ public class TwBot {
                 onEvent(ChannelViewerCountUpdateEvent.class, this::onChannelViewerCountUpdate);
         eventManager.
                 onEvent(ChannelChangeGameEvent.class, this::onChannelChangeGame);
+        eventManager.
+                onEvent(ChannelSubscribeEvent.class, this::onChannelSubscribe);
 //        eventManager
 //                .onEvent(ChannelMessageEvent.class, this::onChannelMessage);
     }
 
+    void onChannelSubscribe (ChannelSubscribeEvent channelSubscribeEvent){
+        if(channelSubscribeEvent.getBroadcasterUserName().equals("honeyramonaflowers") && !channelSubscribeEvent.isGift()){
+            twitchChat.sendMessage("honeyramonaflowers", "honeyr1WOW honeyr1WOW honeyr1WOW ");
+        }
+    }
     void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         streamStartTime = channelGoLiveEvent.getStream().getStartedAtInstant();
         try {
