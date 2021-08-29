@@ -1,21 +1,28 @@
 package ru.hedw1q.TgBot.twitch;
 
 import com.github.twitch4j.common.events.domain.EventChannel;
+import com.github.twitch4j.events.ChannelChangeGameEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import com.github.twitch4j.events.ChannelViewerCountUpdateEvent;
 import com.github.twitch4j.helix.domain.Stream;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.aspectj.lang.annotation.After;
+import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.hedw1q.TgBot.twitch.entities.StreamStatus;
 import ru.hedw1q.TgBot.twitch.services.StreamService;
 
 import java.sql.SQLException;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
 
@@ -23,18 +30,23 @@ import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
  * @author hedw1q
  */
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TwBotTest {
-    @Autowired
-    @Qualifier("krabick")
     TwBot twBot;
     @Autowired
-    StreamService streamService;
+    private StreamService streamService;
+    @Mock
+    private ChannelChangeGameEvent spyChannelChangeGameEvent;
     @Mock
     private ChannelGoLiveEvent spyChannelGoLiveEvent;
     @Mock
     private ChannelGoOfflineEvent spyChannelGoOfflineEvent;
     @Mock
     private ChannelViewerCountUpdateEvent spyChannelViewerCountUpdateEvent;
+    private static int TEST_STREAM_ID;
+
+
 
     @BeforeEach
      void setUp() {
@@ -43,32 +55,65 @@ public class TwBotTest {
         Stream streamSpy = Mockito.mock(Stream.class);
         EventChannel channelSpy = Mockito.mock(EventChannel.class);
 
+        Mockito.when(spyChannelChangeGameEvent.getStream()).thenReturn(streamSpy);
         Mockito.when(spyChannelGoLiveEvent.getStream()).thenReturn(streamSpy);
+        Mockito.when(spyChannelChangeGameEvent.getChannel()).thenReturn(channelSpy);
         Mockito.when(spyChannelGoOfflineEvent.getChannel()).thenReturn(channelSpy);
         Mockito.when(spyChannelGoLiveEvent.getChannel()).thenReturn(channelSpy);
         Mockito.when(spyChannelViewerCountUpdateEvent.getViewerCount()).thenReturn(500);
 
-        Mockito.when(streamSpy.getStartedAtInstant()).thenReturn(Instant.ofEpochSecond(0));
+
+        Mockito.when(spyChannelGoOfflineEvent.getFiredAtInstant()).thenReturn(Instant.ofEpochSecond(1261443700));
+        Mockito.when(streamSpy.getStartedAtInstant()).thenReturn(Instant.ofEpochSecond(1261440000));
+        Mockito.when(streamSpy.getViewerCount()).thenReturn(228);
         Mockito.when(streamSpy.getTitle()).thenReturn("Title");
         Mockito.when(streamSpy.getGameName()).thenReturn("GameName");
         Mockito.when(channelSpy.getName()).thenReturn("ChannelName");
-        Mockito.when(streamSpy.getThumbnailUrl()).thenReturn("https://static-cdn.jtvnw.net/previews-ttv/live_user_timofey-1600x900.jpg");
+        Mockito.when(streamSpy.getThumbnailUrl(1600,900)).thenReturn("https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png");
     }
 
 
     @Test
+    @Order(1)
     void channelGoLiveTest() {
         twBot.onChannelGoLive(this.spyChannelGoLiveEvent);
+        try {
+            ru.hedw1q.TgBot.twitch.entities.Stream stream = streamService.getLastStreamByChannelName("ChannelName");
+            TEST_STREAM_ID=stream.getId();
+
+            assertThat(stream.getStreamStatus()).isEqualTo(StreamStatus.LIVE);
+            assertThat(stream.getChannelName()).isEqualTo("ChannelName");
+            assertThat(stream.getStreamStartTime()).isEqualTo( LocalDateTime.ofInstant(Instant.ofEpochSecond(1261440000), ZoneOffset.UTC));
+            assertThat(stream.getStreamFinishTime()).isNull();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
+    @Test
+    @Order(2)
+    void channelChangeGameTest(){
+        twBot.onChannelChangeGame(this.spyChannelChangeGameEvent);
+    }
 
     @Test
-    void channelGoOfflineTest() throws SQLException {
+    @Order(3)
+    void channelGoOfflineTest() {
         twBot.onChannelViewerCountUpdate(this.spyChannelViewerCountUpdateEvent);
-        ru.hedw1q.TgBot.twitch.entities.Stream stream=streamService.getLastStreamByChannelName("krabick");
-        System.out.println(stream);
-        streamService.setStreamOfflineById(Instant.now(), stream.getId());
 
-        // twBot.onChannelGoOffline(this.spyChannelGoOfflineEvent);
+        try {
+            twBot.onChannelGoOffline(this.spyChannelGoOfflineEvent);
+
+            ru.hedw1q.TgBot.twitch.entities.Stream stream=streamService.getStreamById(TEST_STREAM_ID);
+
+            assertThat(stream.getStreamStatus()).isEqualTo(StreamStatus.OFFLINE);
+            assertThat(stream.getStreamFinishTime()).isNotNull();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    @AfterAll
+    void tearDown(){
+        streamService.deleteStreamById(TEST_STREAM_ID);
     }
 }

@@ -19,6 +19,7 @@ import ru.hedw1q.TgBot.twitch.TwBot;
 /**
  * @author hedw1q
  */
+@Deprecated
 public class CheckStreamStatusCommand extends BotCommand {
 
     private static final Logger logger = LoggerFactory.getLogger(CheckStreamStatusCommand.class);

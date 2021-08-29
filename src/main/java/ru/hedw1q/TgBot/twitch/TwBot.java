@@ -9,6 +9,7 @@ import com.github.twitch4j.events.ChannelChangeGameEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import com.github.twitch4j.events.ChannelViewerCountUpdateEvent;
+import com.github.twitch4j.eventsub.events.ChannelSubscribeEvent;
 import com.github.twitch4j.helix.domain.UserList;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hibernate.boot.spi.InFlightMetadataCollector;
@@ -111,7 +112,7 @@ public class TwBot {
     void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         streamStartTime = channelGoLiveEvent.getStream().getStartedAtInstant();
         try {
-            String message = "❗️Поток от " + channelGoLiveEvent.getChannel().getName() + " на Twitch  ❗️\n" +
+            String message = "❗️Поток от " + channelGoLiveEvent.getChannel().getName() + " на Twitch ❗️\n" +
                     "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
                     "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
                     "\n" +
@@ -168,7 +169,7 @@ public class TwBot {
 
     void onChannelChangeGame(ChannelChangeGameEvent channelChangeGameEvent) {
         try {
-            String message = "❗️"+channelChangeGameEvent.getChannel().getName() + " сменил игру на стриме  ❗️\n" +
+            String message = "❗️"+channelChangeGameEvent.getChannel().getName() + " сменил/a игру на стриме ❗️\n" +
                     "Категория: " + channelChangeGameEvent.getStream().getGameName() + "\n" +
                     "Зрителей: " + channelChangeGameEvent.getStream().getViewerCount();
 
