@@ -32,11 +32,19 @@ public class StreamService {
         streamRepository.save(stream);
     }
 
-    public Stream getLastStreamByChannelName(String channelName) throws SQLException {
+    public Stream getLastStreamByChannelName(String channelName){
         return streamRepository.findCurrentStreamByChannelName(channelName);
     }
 
-    public void setStreamOfflineById(Instant finishTime,Integer streamId) throws SQLException{
+    public void setStreamOfflineById(Instant finishTime,Integer streamId){
         streamRepository.updateStreamSetOfflineById(LocalDateTime.ofInstant(finishTime, ZoneOffset.UTC),streamId);
+    }
+
+    public Stream getStreamById(Integer streamId){
+        return streamRepository.findById(streamId).orElseThrow();
+    }
+
+    public void deleteStreamById(Integer streamId){
+        streamRepository.deleteById(streamId);
     }
 }

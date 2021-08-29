@@ -19,6 +19,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Map;
@@ -80,7 +81,11 @@ public class TgBot extends TelegramLongPollingCommandBot {
                     default:
                         return null;
                 }
-        } catch (TelegramApiException | IOException e) {
+        }catch (MalformedURLException urlException){
+            sendTextMessageToChannel(chatId,text);
+            logger.warn(ExceptionUtils.getFullStackTrace(urlException));
+            return null;
+        }catch (Exception e) {
             logger.error(ExceptionUtils.getFullStackTrace(e));
             return null;
         }

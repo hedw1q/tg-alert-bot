@@ -11,6 +11,7 @@ import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import com.github.twitch4j.events.ChannelViewerCountUpdateEvent;
 import com.github.twitch4j.helix.domain.UserList;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.hibernate.boot.spi.InFlightMetadataCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,9 @@ import ru.hedw1q.TgBot.twitch.services.StreamService;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * @author hedw1q
@@ -74,7 +77,7 @@ public class TwBot {
         twitchClient.getClientHelper()
                 .enableStreamEventListener(twitchConfiguration.getChannelName());
 
-        channelId = twitchClient.getHelix().getUsers(null, null, Arrays.asList(twitchConfiguration.getChannelName()))
+        channelId = twitchClient.getHelix().getUsers(null, null, Collections.singletonList(twitchConfiguration.getChannelName()))
                 .execute()
                 .getUsers()
                 .get(0)
@@ -86,7 +89,7 @@ public class TwBot {
 
     @Deprecated
     public String getStreamIsAlive() {
-        if (twitchClient.getHelix().getStreams(null, "", "", null, null, null, Arrays.asList(channelId), null)
+        if (twitchClient.getHelix().getStreams(null, "", "", null, null, null, Collections.singletonList(channelId), null)
                 .execute().getStreams().get(0).getType().equals("live"))
             return "live";
         return "offline";
@@ -121,7 +124,7 @@ public class TwBot {
             streamService.createNewStream(streamStartTime,channelGoLiveEvent.getChannel().getName());
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(e));
-            //     logger.error(ExceptionUtils.getFullStackTrace(e));
+            logger.error(ExceptionUtils.getFullStackTrace(e));
         } finally {
             streamStartTime=null;
             streamFinishTime = null;
@@ -138,11 +141,10 @@ public class TwBot {
         Integer streamId=null;
         try {
             Stream stream=streamService.getLastStreamByChannelName(channelGoOfflineEvent.getChannel().getName());
-            logger.info(stream.toString());
             streamId=stream.getId();
             streamFinishTime = channelGoOfflineEvent.getFiredAtInstant();
-            streamDuration = Duration.between(stream.getStreamStartTime(), streamFinishTime);
-        } catch (NullPointerException | SQLException e) {
+            streamDuration = Duration.between(stream.getStreamStartTime().toInstant(ZoneOffset.UTC), streamFinishTime);
+        } catch (Exception e) {
             streamDuration = Duration.ZERO;
             logger.error(ExceptionUtils.getFullStackTrace(e));
         }
