@@ -9,10 +9,8 @@ import com.github.twitch4j.events.ChannelChangeGameEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import com.github.twitch4j.events.ChannelViewerCountUpdateEvent;
-import com.github.twitch4j.eventsub.events.ChannelSubscribeEvent;
-import com.github.twitch4j.helix.domain.UserList;
+import com.github.twitch4j.pubsub.events.ChannelSubscribeEvent;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.hibernate.boot.spi.InFlightMetadataCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +70,7 @@ public class TwBot {
                 .withClientSecret(twitchConfiguration.getClientSecret())
                 .withEnableChat(true)
                 .withEnableHelix(true)
+                .withEnableKraken(true)
                 .withChatAccount(credential)
                 .build();
 
@@ -113,7 +112,7 @@ public class TwBot {
 
     void onChannelSubscribe (ChannelSubscribeEvent channelSubscribeEvent){
         logger.info(channelSubscribeEvent.toString());
-        if(channelSubscribeEvent.getBroadcasterUserName().equals("honeyramonaflowers") && !channelSubscribeEvent.isGift()){
+        if(channelSubscribeEvent.getData().getChannelName().equals("honeyramonaflowers")&& !channelSubscribeEvent.getData().getIsGift()){
             twitchChat.sendMessage("honeyramonaflowers", "honeyr1WOW honeyr1WOW honeyr1WOW ");
         }
     }
