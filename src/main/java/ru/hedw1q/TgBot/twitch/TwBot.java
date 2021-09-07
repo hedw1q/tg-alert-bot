@@ -112,6 +112,7 @@ public class TwBot {
     }
 
     void onChannelSubscribe (ChannelSubscribeEvent channelSubscribeEvent){
+        logger.info(channelSubscribeEvent.toString());
         if(channelSubscribeEvent.getBroadcasterUserName().equals("honeyramonaflowers") && !channelSubscribeEvent.isGift()){
             twitchChat.sendMessage("honeyramonaflowers", "honeyr1WOW honeyr1WOW honeyr1WOW ");
         }
