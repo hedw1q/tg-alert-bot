@@ -69,8 +69,7 @@ public class TwBot {
                 .withClientId(twitchConfiguration.getClientId())
                 .withClientSecret(twitchConfiguration.getClientSecret())
                 .withEnableChat(true)
-                .withEnableHelix(true)
-                .withEnableKraken(true)
+                .withEnablePubSub(true)
                 .withChatAccount(credential)
                 .build();
 
