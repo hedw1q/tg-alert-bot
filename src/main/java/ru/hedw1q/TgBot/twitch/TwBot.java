@@ -70,7 +70,6 @@ public class TwBot {
                 .withClientSecret(twitchConfiguration.getClientSecret())
                 .withEnableChat(true)
                 .withEnableHelix(true)
-                .withEnablePubSub(true)
                 .withChatAccount(credential)
                 .build();
 
