@@ -19,7 +19,6 @@ public class TwBotInitializer {
                 getenv.get("twitch.oAuthToken"),
                 getenv.get("twitch.clientId"),
                 getenv.get("twitch.clientSecret"),
-                "Pufozavr",
                 "honeyramonaflowers",
                 "Anti-FUN"
         );
@@ -32,10 +31,10 @@ public class TwBotInitializer {
                 getenv.get("twitch.oAuthToken"),
                 getenv.get("twitch.clientId"),
                 getenv.get("twitch.clientSecret"),
-                "Pufozavr",
                 "Krabick",
                 "Anti-FUN"
         );
         return TwBot.create(twitchConfigurationKrab);
     }
+
 }

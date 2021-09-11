@@ -2,14 +2,15 @@ package ru.hedw1q.TgBot.twitch;
 
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.core.EventManager;
+import com.github.philippheuer.events4j.simple.SimpleEventHandler;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.chat.TwitchChat;
+import com.github.twitch4j.chat.events.channel.SubscriptionEvent;
 import com.github.twitch4j.events.ChannelChangeGameEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import com.github.twitch4j.events.ChannelViewerCountUpdateEvent;
-import com.github.twitch4j.pubsub.events.ChannelSubscribeEvent;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +20,9 @@ import ru.hedw1q.TgBot.twitch.config.TwitchConfiguration;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
 import ru.hedw1q.TgBot.twitch.services.StreamService;
 
-import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
-import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -57,7 +56,7 @@ public class TwBot {
         twitchChat = twitchClient.getChat();
         twitchChat.joinChannel(twitchConfiguration.getChannelName());
 
-        logger.info("Connected to twitch.tv/" + twitchConfiguration.getChannelName());
+        logger.info("Connected to twitch.tv/{}, channelId={}", twitchConfiguration.getChannelName(), channelId);
     }
 
 
@@ -81,8 +80,6 @@ public class TwBot {
                 .getUsers()
                 .get(0)
                 .getId();
-
-
         return twitchClient;
     }
 
@@ -103,18 +100,19 @@ public class TwBot {
                 onEvent(ChannelViewerCountUpdateEvent.class, this::onChannelViewerCountUpdate);
         eventManager.
                 onEvent(ChannelChangeGameEvent.class, this::onChannelChangeGame);
+
         eventManager.
-                onEvent(ChannelSubscribeEvent.class, this::onChannelSubscribe);
+                onEvent(SubscriptionEvent.class, this::onChannelSubscriptionEvent);
 //        eventManager
 //                .onEvent(ChannelMessageEvent.class, this::onChannelMessage);
     }
 
-    void onChannelSubscribe (ChannelSubscribeEvent channelSubscribeEvent){
-        logger.info(channelSubscribeEvent.toString());
-        if(channelSubscribeEvent.getData().getChannelName().equals("honeyramonaflowers")&& !channelSubscribeEvent.getData().getIsGift()){
-            twitchChat.sendMessage("honeyramonaflowers", "honeyr1WOW honeyr1WOW honeyr1WOW ");
+    void onChannelSubscriptionEvent(SubscriptionEvent event) {
+        if(!event.getGifted() && event.getChannel().getName().equals("honeyramonaflowers")){
+            twitchChat.sendMessage(event.getChannel().getName(), "honeyr1WOW honeyr1WOW honeyr1WOW ");
         }
     }
+
     void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         streamStartTime = channelGoLiveEvent.getStream().getStartedAtInstant();
         try {
@@ -128,12 +126,12 @@ public class TwBot {
 
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
 
-            streamService.createNewStream(streamStartTime,channelGoLiveEvent.getChannel().getName());
+            streamService.createNewStream(streamStartTime, channelGoLiveEvent.getChannel().getName());
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(e));
             logger.error(ExceptionUtils.getFullStackTrace(e));
         } finally {
-            streamStartTime=null;
+            streamStartTime = null;
             streamFinishTime = null;
             channelViewerCount = 0;
         }
@@ -145,10 +143,10 @@ public class TwBot {
 
     void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
         Duration streamDuration;
-        Integer streamId=null;
+        Integer streamId = null;
         try {
-            Stream stream=streamService.getLastStreamByChannelName(channelGoOfflineEvent.getChannel().getName());
-            streamId=stream.getId();
+            Stream stream = streamService.getLastStreamByChannelName(channelGoOfflineEvent.getChannel().getName());
+            streamId = stream.getId();
             streamFinishTime = channelGoOfflineEvent.getFiredAtInstant();
             streamDuration = Duration.between(stream.getStreamStartTime().toInstant(ZoneOffset.UTC), streamFinishTime);
         } catch (Exception e) {
@@ -165,7 +163,7 @@ public class TwBot {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
             streamService.setStreamOfflineById(streamFinishTime, streamId);
         } catch (Exception e) {
-              logger.error(ExceptionUtils.getFullStackTrace(e));
+            logger.error(ExceptionUtils.getFullStackTrace(e));
         } finally {
             streamStartTime = null;
             streamFinishTime = null;
@@ -175,7 +173,7 @@ public class TwBot {
 
     void onChannelChangeGame(ChannelChangeGameEvent channelChangeGameEvent) {
         try {
-            String message = "❗️"+channelChangeGameEvent.getChannel().getName() + " сменил/a игру на стриме ❗️\n" +
+            String message = "❗️" + channelChangeGameEvent.getChannel().getName() + " сменил/a игру на стриме ❗️\n" +
                     "Категория: " + channelChangeGameEvent.getStream().getGameName() + "\n" +
                     "Зрителей: " + channelChangeGameEvent.getStream().getViewerCount();
 
