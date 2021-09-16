@@ -43,7 +43,7 @@ public class TgBot extends TelegramLongPollingCommandBot {
 
     @Override
     public void processNonCommandUpdate(Update update) {
-//        Message msg = update.getMessage();
+        //        Message msg = update.getMessage();
 //        Long chatId = msg.getChatId();
 //
 //        sendTextMessageToChannel(chatId,chatId.toString());

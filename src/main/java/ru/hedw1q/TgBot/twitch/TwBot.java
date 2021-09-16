@@ -108,7 +108,7 @@ public class TwBot {
     }
 
     void onChannelSubscriptionEvent(SubscriptionEvent event) {
-        if(!event.getGifted() && event.getChannel().getName().equals("honeyramonaflowers")){
+        if(event.getChannel().getName().equals("honeyramonaflowers")){
             twitchChat.sendMessage(event.getChannel().getName(), "honeyr1WOW honeyr1WOW honeyr1WOW ");
         }
     }
