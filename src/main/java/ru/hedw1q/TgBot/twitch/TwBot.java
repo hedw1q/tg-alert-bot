@@ -108,9 +108,13 @@ public class TwBot {
     }
 
     void onChannelSubscriptionEvent(SubscriptionEvent event) {
-        if(event.getChannel().getName().equals("honeyramonaflowers")){
-            twitchChat.sendMessage(event.getChannel().getName(), "honeyr1WOW honeyr1WOW honeyr1WOW ");
-        }
+        try {
+            Thread.currentThread().wait(1500);
+
+            if (event.getChannel().getName().equals("honeyramonaflowers")) {
+                twitchChat.sendMessage(event.getChannel().getName(), "honeyr1WOW honeyr1WOW honeyr1WOW ");
+            }
+        }catch (InterruptedException ie){ }
     }
 
     void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
