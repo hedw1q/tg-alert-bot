@@ -19,7 +19,7 @@ import static ru.hedw1q.TgBot.discord.DsBotInitializer.stickerMap;
 public class MessageCreateListener extends MessageListener implements EventListener<MessageCreateEvent> {
 
     static final long TG_CHANNEL_ID = -1001537091172L;
-    static final List<Long> DS_CHANNEL_IDS = Arrays.asList(552454831122546699L, 860904072306229288L);
+    static final List<Long> DS_CHANNEL_IDS = Arrays.asList(552454831122546699L, 379833575945797633L, 888723970889764868L);
 
     @Override
     public Class<MessageCreateEvent> getEventType() {
@@ -51,8 +51,7 @@ public class MessageCreateListener extends MessageListener implements EventListe
 
     private boolean validateMessage(MessageCreateEvent event) {
         if (!DS_CHANNEL_IDS.contains(event.getMessage().getChannelId().asLong())
-                || event.getMessage().getAuthor().orElseThrow().isBot()
-                || !event.getMessage().getAuthor().orElseThrow().getUsername().trim().equals("hedw1q"))
+                || event.getMessage().getAuthor().orElseThrow().isBot())
             return false;
         return true;
     }
