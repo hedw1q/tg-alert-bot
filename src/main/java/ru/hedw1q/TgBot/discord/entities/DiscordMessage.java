@@ -24,6 +24,22 @@ public class DiscordMessage {
         return this.getMessageText();
     }
 
+    public String formatOutputText(Map<String, String> stickerMap, String messageAuthor) {
+        this.removeMentions()
+                .replaceDiscordStickersToEmojis(stickerMap)
+                .addMessageAuthor(messageAuthor);
+        return this.getMessageText();
+    }
+
+    public DiscordMessage addMessageAuthor(String messageAuthor){
+        setMessageText("From "+
+                messageAuthor +
+                ": "+
+                getMessageText()
+        );
+        return this;
+    }
+
     public DiscordMessage removeMentions() {
 // <@&798570807143170079> <@&808698758547374111> @everyone
         Pattern pattern = Pattern.compile("<@.+>");

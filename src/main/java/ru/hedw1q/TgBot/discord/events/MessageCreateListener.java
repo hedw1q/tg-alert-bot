@@ -34,7 +34,7 @@ public class MessageCreateListener extends MessageListener implements EventListe
 
 
         DiscordMessage discordMessage = new DiscordMessage(event.getMessage().getContent());
-        discordMessage.formatOutputText(stickerMap);
+        discordMessage.formatOutputText(stickerMap,event.getMessage().getAuthor().orElseThrow().getUsername());
 
         if (!event.getMessage().getAttachments().isEmpty()) {
             List<Attachment> attachmentList = new ArrayList<>(event.getMessage().getAttachments());
