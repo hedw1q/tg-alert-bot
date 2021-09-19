@@ -3,6 +3,7 @@ package ru.hedw1q.TgBot.twitch;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import ru.hedw1q.TgBot.twitch.config.TwitchConfiguration;
+import ru.hedw1q.TgBot.twitch.config.AuthData;
 
 import java.util.Map;
 
@@ -13,9 +14,17 @@ import java.util.Map;
 public class TwBotInitializer {
     private static final Map<String, String> getenv = System.getenv();
 
-    @Bean(name="honeyramonaflowers")
+    static {
+        AuthData twitchAuth = new AuthData(
+                getenv.get("twitch.oAuthToken"),
+                getenv.get("twitch.clientId"),
+                getenv.get("twitch.clientSecret"));
+    }
+
+
+    @Bean(name = "honeyramonaflowers")
     public TwBot createBotHoneyramonaflowers() {
-        TwitchConfiguration twitchConfiguration=new TwitchConfiguration(
+        TwitchConfiguration twitchConfiguration = new TwitchConfiguration(
                 getenv.get("twitch.oAuthToken"),
                 getenv.get("twitch.clientId"),
                 getenv.get("twitch.clientSecret"),
@@ -25,9 +34,9 @@ public class TwBotInitializer {
         return TwBot.create(twitchConfiguration);
     }
 
-    @Bean(name="krabick")
+    @Bean(name = "krabick")
     public TwBot createBotKrabick() {
-        TwitchConfiguration twitchConfigurationKrab=new TwitchConfiguration(
+        TwitchConfiguration twitchConfigurationKrab = new TwitchConfiguration(
                 getenv.get("twitch.oAuthToken"),
                 getenv.get("twitch.clientId"),
                 getenv.get("twitch.clientSecret"),

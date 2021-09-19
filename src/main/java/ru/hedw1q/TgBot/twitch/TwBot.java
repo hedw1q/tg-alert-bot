@@ -24,6 +24,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author hedw1q
@@ -107,9 +108,13 @@ public class TwBot {
 //                .onEvent(ChannelMessageEvent.class, this::onChannelMessage);
     }
 
-    void onChannelSubscriptionEvent(SubscriptionEvent event) {
+    void onChannelSubscriptionEvent(SubscriptionEvent event)  {
+
             if (event.getChannel().getName().equals("honeyramonaflowers")) {
-                twitchChat.sendMessage(event.getChannel().getName(), "honeyr1WOW honeyr1WOW honeyr1WOW ");
+                try{
+                    TimeUnit.SECONDS.sleep(1);
+                    twitchChat.sendMessage(event.getChannel().getName(), "honeyr1WOW honeyr1WOW honeyr1WOW ");
+                }catch (InterruptedException ie){ }
             }
     }
 
