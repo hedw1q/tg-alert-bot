@@ -1,4 +1,4 @@
-package ru.hedw1q.TgBot.twitch;
+package ru.hedw1q.TgBot.twitch.entities.streamers;
 
 import com.github.twitch4j.common.events.domain.EventChannel;
 import com.github.twitch4j.events.ChannelChangeGameEvent;
@@ -13,7 +13,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.hedw1q.TgBot.twitch.TwBot;
 import ru.hedw1q.TgBot.twitch.entities.StreamStatus;
+import ru.hedw1q.TgBot.twitch.entities.streamers.BaseStreamer;
 import ru.hedw1q.TgBot.twitch.services.StreamService;
 
 import java.sql.SQLException;
@@ -32,8 +34,10 @@ import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TwBotTest {
-    TwBot twBot;
+public class BaseStreamerTest {
+
+    BaseStreamer testStreamer=new BaseStreamer() {};
+
     @Autowired
     private StreamService streamService;
     @Mock
@@ -44,6 +48,7 @@ public class TwBotTest {
     private ChannelGoOfflineEvent spyChannelGoOfflineEvent;
     @Mock
     private ChannelViewerCountUpdateEvent spyChannelViewerCountUpdateEvent;
+
     private static int TEST_STREAM_ID;
 
 
@@ -76,7 +81,7 @@ public class TwBotTest {
     @Test
     @Order(1)
     void channelGoLiveTest() {
-        twBot.onChannelGoLive(this.spyChannelGoLiveEvent);
+        testStreamer.onChannelGoLive(this.spyChannelGoLiveEvent);
         try {
             ru.hedw1q.TgBot.twitch.entities.Stream stream = streamService.getLastStreamByChannelName("ChannelName");
             TEST_STREAM_ID=stream.getId();
@@ -93,16 +98,16 @@ public class TwBotTest {
     @Test
     @Order(2)
     void channelChangeGameTest(){
-        twBot.onChannelChangeGame(this.spyChannelChangeGameEvent);
+        testStreamer.onChannelChangeGame(this.spyChannelChangeGameEvent);
     }
 
     @Test
     @Order(3)
     void channelGoOfflineTest() {
-        twBot.onChannelViewerCountUpdate(this.spyChannelViewerCountUpdateEvent);
+        testStreamer.onChannelViewerCountUpdate(this.spyChannelViewerCountUpdateEvent);
 
         try {
-            twBot.onChannelGoOffline(this.spyChannelGoOfflineEvent);
+            testStreamer.onChannelGoOffline(this.spyChannelGoOfflineEvent);
 
             ru.hedw1q.TgBot.twitch.entities.Stream stream=streamService.getStreamById(TEST_STREAM_ID);
 

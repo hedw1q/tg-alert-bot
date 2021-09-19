@@ -46,8 +46,4 @@ public class Stream extends BaseEntity {
     @Setter
     private LocalDateTime streamFinishTime;
 
-    @Getter
-    @Setter
-    @Transient
-    private int viewerCount;
 }

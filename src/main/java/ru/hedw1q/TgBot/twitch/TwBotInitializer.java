@@ -1,10 +1,17 @@
 package ru.hedw1q.TgBot.twitch;
 
+import com.github.twitch4j.TwitchClient;
+import com.github.twitch4j.chat.TwitchChat;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import ru.hedw1q.TgBot.twitch.config.TwitchConfiguration;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
+import ru.hedw1q.TgBot.twitch.entities.streamers.BaseStreamer;
+import ru.hedw1q.TgBot.twitch.entities.streamers.FemaleStreamer;
+import ru.hedw1q.TgBot.twitch.entities.streamers.MaleStreamer;
+import ru.hedw1q.TgBot.twitch.entities.streamers.Ramona;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,37 +20,28 @@ import java.util.Map;
 @Component
 public class TwBotInitializer {
     private static final Map<String, String> getenv = System.getenv();
+    public TwitchClient twitchClient;
+    public TwitchChat twitchChat;
+    private static final AuthData twitchAuth;
 
     static {
-        AuthData twitchAuth = new AuthData(
+        twitchAuth = new AuthData(
                 getenv.get("twitch.oAuthToken"),
                 getenv.get("twitch.clientId"),
                 getenv.get("twitch.clientSecret"));
     }
 
 
-    @Bean(name = "honeyramonaflowers")
-    public TwBot createBotHoneyramonaflowers() {
-        TwitchConfiguration twitchConfiguration = new TwitchConfiguration(
-                getenv.get("twitch.oAuthToken"),
-                getenv.get("twitch.clientId"),
-                getenv.get("twitch.clientSecret"),
-                "honeyramonaflowers",
-                "Anti-FUN"
-        );
-        return TwBot.create(twitchConfiguration);
-    }
+    @Bean
+    public List<BaseStreamer> initBot() {
+        ArrayList<BaseStreamer> streamers = new ArrayList<>();
 
-    @Bean(name = "krabick")
-    public TwBot createBotKrabick() {
-        TwitchConfiguration twitchConfigurationKrab = new TwitchConfiguration(
-                getenv.get("twitch.oAuthToken"),
-                getenv.get("twitch.clientId"),
-                getenv.get("twitch.clientSecret"),
-                "Krabick",
-                "Anti-FUN"
-        );
-        return TwBot.create(twitchConfigurationKrab);
+        streamers.add(new MaleStreamer("Krabick", twitchAuth));
+        streamers.add(new Ramona("honeyramonaflowers", twitchAuth));
+        streamers.add(new MaleStreamer("melharucos", twitchAuth));
+        streamers.add(new FemaleStreamer("zanuda", twitchAuth));
+
+        return streamers;
     }
 
 }

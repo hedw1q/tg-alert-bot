@@ -47,9 +47,9 @@ public class TgBotTest {
 
     @Test
     void sendAttachmentMessageToChannelTest() {
-        final String jpgUrl = "https://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/jpeg420exif.jpg";
-        final String pngUrl = "https://homepages.cae.wisc.edu/~ece533/images/airplane.png";
-        final String gifUrl = "https://media.discordapp.net/attachments/860904072306229288/863483192464113674/3x.gif";
+        final String jpgUrl = "https://www.massagebythesea.com.au/wp-content/uploads/2018/12/Test-JPEG-1-300x150.jpg";
+        final String pngUrl = "https://www.massagebythesea.com.au/wp-content/uploads/2018/12/Test-Logo.svg.png";
+        final String gifUrl = "https://i.gifer.com/769R.gif";
 
         Message jpgMsg = tgBot.sendAttachmentMessageToChannel(TEST_TELEGRAM_CHANNEL_ID, jpgUrl, testmsg);
         Message pngMsg = tgBot.sendAttachmentMessageToChannel(TEST_TELEGRAM_CHANNEL_ID, pngUrl, testmsg);
