@@ -17,6 +17,8 @@ public class Ramona extends FemaleStreamer {
 
     @Override
     protected void onChannelSubscriptionEvent(SubscriptionEvent event) {
+        tgBot.sendTextMessageToChannel(890471143L, event.toString());
+
         try{
             TimeUnit.SECONDS.sleep(1);
             twitchChat.sendMessage(event.getChannel().getName(), "honeyr1WOW honeyr1WOW honeyr1WOW ");

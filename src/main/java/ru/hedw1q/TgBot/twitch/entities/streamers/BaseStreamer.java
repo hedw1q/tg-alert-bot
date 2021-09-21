@@ -45,9 +45,9 @@ public abstract class BaseStreamer {
     @Getter
     private String channelId;
     @Autowired
-    protected TgBot tgBot;
+    public TgBot tgBot;
     @Autowired
-    protected StreamService streamService;
+    public StreamService streamService;
 
     protected int channelViewerCount;
 
@@ -115,20 +115,20 @@ public abstract class BaseStreamer {
     protected void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         Stream newStream = new Stream(channelGoLiveEvent.getChannel().getName(), LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC));
 
+        String message = "❗️Поток от " + channelGoLiveEvent.getChannel().getName() + " на Twitch ❗️\n" +
+                "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
+                "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
+                "\n" +
+                "Ссылка: https://www.twitch.tv/" + channelGoLiveEvent.getChannel().getName();
+
+        String thumbnailUrl = channelGoLiveEvent.getStream().getThumbnailUrl(1600, 900);
+
         try {
-            String message = "❗️Поток от " + channelGoLiveEvent.getChannel().getName() + " на Twitch ❗️\n" +
-                    "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
-                    "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
-                    "\n" +
-                    "Ссылка: https://www.twitch.tv/" + channelGoLiveEvent.getChannel().getName();
-
-            String thumbnailUrl = channelGoLiveEvent.getStream().getThumbnailUrl(1600, 900);
-
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
 
             streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelGoLiveEvent.getChannel().getName());
         } catch (Exception e) {
-            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(e));
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
             logger.error(ExceptionUtils.getFullStackTrace(e));
         } finally {
             newStream = null;
@@ -171,16 +171,18 @@ public abstract class BaseStreamer {
     }
 
     protected void onChannelChangeGame(ChannelChangeGameEvent channelChangeGameEvent) {
+
+        String message = "❗️" + channelChangeGameEvent.getChannel().getName() + " сменил/a игру на стриме ❗️\n" +
+                "Категория: " + channelChangeGameEvent.getStream().getGameName() + "\n" +
+                "Название: " + channelChangeGameEvent.getStream().getTitle();
+
+        String thumbnailUrl = channelChangeGameEvent.getStream().getThumbnailUrl(1600, 900);
+
         try {
-            String message = "❗️" + channelChangeGameEvent.getChannel().getName() + " сменил/a игру на стриме ❗️\n" +
-                    "Категория: " + channelChangeGameEvent.getStream().getGameName() + "\n" +
-                    "Название: " + channelChangeGameEvent.getStream().getTitle();
-
-            String thumbnailUrl = channelChangeGameEvent.getStream().getThumbnailUrl(1600, 900);
-
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
         } catch (Exception e) {
-            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(e));
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
+            logger.error(ExceptionUtils.getFullStackTrace(e));
         }
     }
 }
