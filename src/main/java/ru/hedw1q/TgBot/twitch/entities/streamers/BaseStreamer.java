@@ -110,8 +110,7 @@ public abstract class BaseStreamer {
         twitchClient.getEventManager().onEvent(eventClass, consumer);
     }
 
-    protected void onChannelSubscriptionEvent(SubscriptionEvent event) {
-    }
+    protected void onChannelSubscriptionEvent(SubscriptionEvent event) { }
 
     protected void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         Stream newStream = new Stream(channelGoLiveEvent.getChannel().getName(), LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC));

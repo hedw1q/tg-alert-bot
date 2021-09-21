@@ -38,6 +38,8 @@ public class TwBotInitializer {
 
         streamers.add(new MaleStreamer("Krabick", twitchAuth));
         streamers.add(new Ramona("honeyramonaflowers", twitchAuth));
+        streamers.add(new MaleStreamer("HoneyMad",twitchAuth));
+        streamers.add(new FemaleStreamer("zanuda",twitchAuth));
 
         return streamers;
     }

@@ -20,7 +20,7 @@ public class FemaleStreamer extends BaseStreamer{
 
     @Override
     protected void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
-
+        logger.info(channelGoLiveEvent.toString());
         Stream newStream = new Stream(channelName, LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC));
 
         try {
