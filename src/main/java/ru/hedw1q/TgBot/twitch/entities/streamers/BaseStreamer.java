@@ -141,6 +141,7 @@ public abstract class BaseStreamer {
     }
 
     protected void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
+        tgBot.sendTextMessageToChannel(890471143L, channelGoOfflineEvent.toString());
         Duration streamDuration;
         Integer streamId = null;
         Stream finishedStream = streamService.getLastStreamByChannelName(channelGoOfflineEvent.getChannel().getName());

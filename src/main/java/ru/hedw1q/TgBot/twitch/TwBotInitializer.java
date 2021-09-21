@@ -20,8 +20,7 @@ import java.util.Map;
 @Component
 public class TwBotInitializer {
     private static final Map<String, String> getenv = System.getenv();
-    public TwitchClient twitchClient;
-    public TwitchChat twitchChat;
+
     private static final AuthData twitchAuth;
 
     static {
