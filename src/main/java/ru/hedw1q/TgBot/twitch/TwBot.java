@@ -2,7 +2,6 @@ package ru.hedw1q.TgBot.twitch;
 
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.core.EventManager;
-import com.github.philippheuer.events4j.simple.SimpleEventHandler;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.chat.TwitchChat;
@@ -14,11 +13,11 @@ import com.github.twitch4j.events.ChannelViewerCountUpdateEvent;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.hedw1q.TgBot.telegram.TgBot;
 import ru.hedw1q.TgBot.twitch.config.TwitchConfiguration;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
 import ru.hedw1q.TgBot.twitch.services.StreamService;
+import ru.hedw1q.TgBot.twitch.services.StreamServiceImpl;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -32,7 +31,9 @@ import java.util.concurrent.TimeUnit;
 public class TwBot {
     public static long TG_CHANNEL_ID = -1001537091172L;
 
+//    @Autowired
     private TgBot tgBot;
+ //   @Autowired
     StreamService streamService;
     private static final Logger logger = LoggerFactory.getLogger(TwBot.class);
     private TwitchClient twitchClient;

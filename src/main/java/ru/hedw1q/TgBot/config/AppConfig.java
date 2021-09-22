@@ -6,6 +6,5 @@ import org.springframework.context.annotation.Configuration;
  * @author hedw1q
  */
 
-@Configuration
 public class AppConfig {
 }

@@ -2,8 +2,10 @@ package ru.hedw1q.TgBot.twitch;
 
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.chat.TwitchChat;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import ru.hedw1q.TgBot.telegram.TgBot;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
 import ru.hedw1q.TgBot.twitch.entities.streamers.BaseStreamer;
 import ru.hedw1q.TgBot.twitch.entities.streamers.FemaleStreamer;
@@ -19,6 +21,9 @@ import java.util.Map;
  */
 @Component
 public class TwBotInitializer {
+    @Autowired
+    TgBot tgBot;
+
     private static final Map<String, String> getenv = System.getenv();
 
     private static final AuthData twitchAuth;
@@ -32,8 +37,8 @@ public class TwBotInitializer {
 
 
     @Bean
-    public List<BaseStreamer> initBot() {
-        ArrayList<BaseStreamer> streamers = new ArrayList<>();
+    public List<? extends BaseStreamer> initBot() {
+        List<BaseStreamer> streamers = new ArrayList<>();
 
         streamers.add(new MaleStreamer("Krabick", twitchAuth));
         streamers.add(new Ramona("honeyramonaflowers", twitchAuth));
@@ -44,5 +49,6 @@ public class TwBotInitializer {
 
         return streamers;
     }
+
 
 }

@@ -33,9 +33,9 @@ import java.util.function.Consumer;
  * @author hedw1q
  */
 
-public abstract class BaseStreamer {
+public abstract class BaseStreamer implements BaseStreamerI {
 
-    public static long TG_CHANNEL_ID = -1001537091172L;
+    public static final long TG_CHANNEL_ID = -1001537091172L;
 
     protected static final Logger logger = LoggerFactory.getLogger(BaseStreamer.class);
 
@@ -44,10 +44,9 @@ public abstract class BaseStreamer {
     String channelName;
     @Getter
     private String channelId;
-    @Autowired
-    public TgBot tgBot;
-    @Autowired
-    public StreamService streamService;
+
+    protected TgBot tgBot;
+    protected StreamService streamService;
 
     protected int channelViewerCount;
 
@@ -58,7 +57,6 @@ public abstract class BaseStreamer {
 
     public BaseStreamer(String channelName, AuthData authData) {
         this.channelName = channelName;
-        logger.info(tgBot.getBotUsername());
         OAuth2Credential credential = new OAuth2Credential("twitch", authData.getOAuthToken());
 
         twitchClient = TwitchClientBuilder.builder()
@@ -93,6 +91,16 @@ public abstract class BaseStreamer {
     void preDestroy(){
     }
 
+    @Autowired
+    public final void setStreamService(StreamService streamService){
+        this.streamService=streamService;
+    }
+
+    @Autowired
+    public final void setTgBot(TgBot tgBot){
+        this.tgBot=tgBot;
+    }
+
     void registerEventHandlers(EventManager eventManager) {
         eventManager
                 .onEvent(ChannelGoLiveEvent.class, this::onChannelGoLive);
@@ -110,9 +118,11 @@ public abstract class BaseStreamer {
         twitchClient.getEventManager().onEvent(eventClass, consumer);
     }
 
-    protected void onChannelSubscriptionEvent(SubscriptionEvent event) { }
+    @Override
+    public void onChannelSubscriptionEvent(SubscriptionEvent event) { }
 
-    protected void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
+    @Override
+    public void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         Stream newStream = new Stream(channelGoLiveEvent.getChannel().getName(), LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC));
 
         String message = "❗️Поток от " + channelGoLiveEvent.getChannel().getName() + " на Twitch ❗️\n" +
@@ -131,17 +141,17 @@ public abstract class BaseStreamer {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
             logger.error(ExceptionUtils.getFullStackTrace(e));
         } finally {
-            newStream = null;
             channelViewerCount = 0;
         }
     }
 
-    protected void onChannelViewerCountUpdate(ChannelViewerCountUpdateEvent channelViewerCountUpdateEvent) {
+    @Override
+    public void onChannelViewerCountUpdate(ChannelViewerCountUpdateEvent channelViewerCountUpdateEvent) {
         channelViewerCount = channelViewerCountUpdateEvent.getViewerCount();
     }
 
-    protected void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
-        tgBot.sendTextMessageToChannel(890471143L, channelGoOfflineEvent.toString());
+    @Override
+    public void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
         Duration streamDuration;
         Integer streamId = null;
         Stream finishedStream = streamService.getLastStreamByChannelName(channelGoOfflineEvent.getChannel().getName());
@@ -166,12 +176,12 @@ public abstract class BaseStreamer {
         } catch (Exception e) {
             logger.error(ExceptionUtils.getFullStackTrace(e));
         } finally {
-            finishedStream = null;
             channelViewerCount = 0;
         }
     }
 
-    protected void onChannelChangeGame(ChannelChangeGameEvent channelChangeGameEvent) {
+    @Override
+    public void onChannelChangeGame(ChannelChangeGameEvent channelChangeGameEvent) {
 
         String message = "❗️" + channelChangeGameEvent.getChannel().getName() + " сменил/a игру на стриме ❗️\n" +
                 "Категория: " + channelChangeGameEvent.getStream().getGameName() + "\n" +

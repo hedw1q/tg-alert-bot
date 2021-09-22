@@ -6,19 +6,15 @@ import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import com.github.twitch4j.events.ChannelViewerCountUpdateEvent;
 import com.github.twitch4j.helix.domain.Stream;
-import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.hedw1q.TgBot.twitch.TwBot;
 import ru.hedw1q.TgBot.twitch.entities.StreamStatus;
-import ru.hedw1q.TgBot.twitch.entities.streamers.BaseStreamer;
-import ru.hedw1q.TgBot.twitch.services.StreamService;
+import ru.hedw1q.TgBot.twitch.services.StreamServiceImpl;
 
-import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -39,7 +35,7 @@ public class BaseStreamerTest {
     BaseStreamer testStreamer=new BaseStreamer() {};
 
     @Autowired
-    private StreamService streamService;
+    private StreamServiceImpl streamService;
     @Mock
     private ChannelChangeGameEvent spyChannelChangeGameEvent;
     @Mock

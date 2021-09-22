@@ -4,6 +4,7 @@ package ru.hedw1q.TgBot.twitch.entities.streamers;
 import com.github.twitch4j.events.ChannelChangeGameEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import ru.hedw1q.TgBot.telegram.TgBot;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
 
@@ -20,17 +21,16 @@ public class MaleStreamer extends BaseStreamer {
     }
 
     @Override
-    protected void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
+    public void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, channelGoLiveEvent.toString());
 
         Stream newStream = new Stream(channelName, LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC));
-        logger.info(newStream.toString());
+
         String message = "❗️" + channelGoLiveEvent.getChannel().getName() + "завел на Twitch ❗️\n" +
                 "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
                 "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
                 "\n" +
                 "Ссылка: https://www.twitch.tv/" + channelGoLiveEvent.getChannel().getName();
-        logger.info(message);
         String thumbnailUrl = channelGoLiveEvent.getStream().getThumbnailUrl(1600, 900);
         try {
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
@@ -45,7 +45,7 @@ public class MaleStreamer extends BaseStreamer {
     }
 
     @Override
-    protected void onChannelChangeGame(ChannelChangeGameEvent channelChangeGameEvent) {
+    public void onChannelChangeGame(ChannelChangeGameEvent channelChangeGameEvent) {
         try {
             String message = "❗️" + channelChangeGameEvent.getChannel().getName() + " сменил игру на стриме ❗️\n" +
                     "Категория: " + channelChangeGameEvent.getStream().getGameName() + "\n" +
