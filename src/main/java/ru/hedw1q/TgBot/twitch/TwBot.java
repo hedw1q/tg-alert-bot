@@ -32,9 +32,7 @@ import java.util.concurrent.TimeUnit;
 public class TwBot {
     public static long TG_CHANNEL_ID = -1001537091172L;
 
-    @Autowired
     private TgBot tgBot;
-    @Autowired
     StreamService streamService;
     private static final Logger logger = LoggerFactory.getLogger(TwBot.class);
     private TwitchClient twitchClient;
@@ -114,7 +112,9 @@ public class TwBot {
                 try{
                     TimeUnit.SECONDS.sleep(1);
                     twitchChat.sendMessage(event.getChannel().getName(), "honeyr1WOW honeyr1WOW honeyr1WOW ");
-                }catch (InterruptedException ie){ }
+                }catch (InterruptedException ie){
+                    logger.error(ie.getMessage());
+                }
             }
     }
 

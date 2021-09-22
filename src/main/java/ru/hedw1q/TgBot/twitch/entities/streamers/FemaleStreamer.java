@@ -20,13 +20,16 @@ public class FemaleStreamer extends BaseStreamer{
 
     @Override
     protected void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
-        logger.info(channelGoLiveEvent.toString());
+        tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, channelGoLiveEvent.toString());
+
         Stream newStream = new Stream(channelName, LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC));
+        logger.info(newStream.toString());
         String message = "❗️" + channelGoLiveEvent.getChannel().getName() + "завела на Twitch ❗️\n" +
                 "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
                 "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
                 "\n" +
                 "Ссылка: https://www.twitch.tv/" + channelGoLiveEvent.getChannel().getName();
+        logger.info(message);
 
         String thumbnailUrl = channelGoLiveEvent.getStream().getThumbnailUrl(1600, 900);
 
@@ -38,7 +41,6 @@ public class FemaleStreamer extends BaseStreamer{
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
             logger.error(ExceptionUtils.getFullStackTrace(e));
         } finally {
-            newStream = null;
             channelViewerCount = 0;
         }
     }
