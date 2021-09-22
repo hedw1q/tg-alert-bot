@@ -45,8 +45,10 @@ public abstract class BaseStreamer implements BaseStreamerI {
     @Getter
     private String channelId;
 
-    protected TgBot tgBot;
-    protected StreamService streamService;
+    @Autowired
+    public TgBot tgBot;
+    @Autowired
+    public StreamService streamService;
 
     protected int channelViewerCount;
 
@@ -57,6 +59,7 @@ public abstract class BaseStreamer implements BaseStreamerI {
 
     public BaseStreamer(String channelName, AuthData authData) {
         this.channelName = channelName;
+
         OAuth2Credential credential = new OAuth2Credential("twitch", authData.getOAuthToken());
 
         twitchClient = TwitchClientBuilder.builder()
@@ -85,20 +88,11 @@ public abstract class BaseStreamer implements BaseStreamerI {
     }
 
     @PostConstruct
-    void construct() {
+    void afterInit(){
     }
+
     @PreDestroy
-    void preDestroy(){
-    }
-
-    @Autowired
-    public final void setStreamService(StreamService streamService){
-        this.streamService=streamService;
-    }
-
-    @Autowired
-    public final void setTgBot(TgBot tgBot){
-        this.tgBot=tgBot;
+    void beforeDestroy(){
     }
 
     void registerEventHandlers(EventManager eventManager) {
@@ -119,7 +113,8 @@ public abstract class BaseStreamer implements BaseStreamerI {
     }
 
     @Override
-    public void onChannelSubscriptionEvent(SubscriptionEvent event) { }
+    public void onChannelSubscriptionEvent(SubscriptionEvent event) {
+    }
 
     @Override
     public void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {

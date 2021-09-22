@@ -7,12 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import ru.hedw1q.TgBot.telegram.TgBot;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
-import ru.hedw1q.TgBot.twitch.entities.streamers.BaseStreamer;
-import ru.hedw1q.TgBot.twitch.entities.streamers.FemaleStreamer;
-import ru.hedw1q.TgBot.twitch.entities.streamers.MaleStreamer;
-import ru.hedw1q.TgBot.twitch.entities.streamers.Ramona;
+import ru.hedw1q.TgBot.twitch.entities.streamers.*;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -33,15 +32,14 @@ public class TwBotInitializer {
                 getenv.get("twitch.clientSecret"));
     }
 
+    @Bean
+    public MaleStreamer initKrabickBot() {
+        return new MaleStreamer("Krabick", twitchAuth);
+    }
 
     @Bean
-    public List<? extends BaseStreamer> initBot() {
-        List<BaseStreamer> streamers = new ArrayList<>();
-
-        streamers.add(new MaleStreamer("Krabick", twitchAuth));
-        streamers.add(new Ramona("honeyramonaflowers", twitchAuth));
-
-        return streamers;
+    public Ramona initRamonaBot() {
+        return new Ramona("honeyramonaflowers", twitchAuth);
     }
 
 

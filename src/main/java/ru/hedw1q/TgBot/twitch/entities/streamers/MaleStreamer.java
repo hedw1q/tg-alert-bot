@@ -4,7 +4,6 @@ package ru.hedw1q.TgBot.twitch.entities.streamers;
 import com.github.twitch4j.events.ChannelChangeGameEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import ru.hedw1q.TgBot.telegram.TgBot;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
 
@@ -43,7 +42,7 @@ public class MaleStreamer extends BaseStreamer {
             channelViewerCount = 0;
         }
     }
-
+//krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13
     @Override
     public void onChannelChangeGame(ChannelChangeGameEvent channelChangeGameEvent) {
         try {
@@ -59,4 +58,5 @@ public class MaleStreamer extends BaseStreamer {
             logger.error(ExceptionUtils.getFullStackTrace(e));
         }
     }
+
 }

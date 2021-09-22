@@ -13,9 +13,7 @@ import java.time.ZoneOffset;
  */
 public interface StreamService {
 
-    String StreamServiceTest="StreamServiceTest";
-
-    static final Logger logger = LoggerFactory.getLogger(StreamService.class);
+    Logger logger = LoggerFactory.getLogger(StreamService.class);
 
     void createNewStream(Instant startTime, String channelName);
 

@@ -3,8 +3,11 @@ package ru.hedw1q.TgBot.twitch.entities.streamers;
 import com.github.twitch4j.events.ChannelChangeGameEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.hedw1q.TgBot.telegram.TgBot;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
+import ru.hedw1q.TgBot.twitch.services.StreamService;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -13,6 +16,11 @@ import java.time.ZoneOffset;
  * @author hedw1q
  */
 public class FemaleStreamer extends BaseStreamer{
+
+    @Autowired
+    public TgBot tgBot;
+    @Autowired
+    public StreamService streamService;
 
     public FemaleStreamer(String channelName, AuthData authData) {
         super(channelName, authData);
