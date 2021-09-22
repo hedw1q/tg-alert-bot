@@ -58,7 +58,7 @@ public abstract class BaseStreamer {
 
     public BaseStreamer(String channelName, AuthData authData) {
         this.channelName = channelName;
-
+        logger.info(tgBot.getBotUsername());
         OAuth2Credential credential = new OAuth2Credential("twitch", authData.getOAuthToken());
 
         twitchClient = TwitchClientBuilder.builder()
