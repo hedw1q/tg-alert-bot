@@ -35,7 +35,7 @@ import java.util.function.Consumer;
 
 public abstract class BaseStreamer implements BaseStreamerI {
 
-    public static final long TG_CHANNEL_ID = -1001537091172L;
+    public static long TG_CHANNEL_ID = -1001537091172L;
 
     protected static final Logger logger = LoggerFactory.getLogger(BaseStreamer.class);
 

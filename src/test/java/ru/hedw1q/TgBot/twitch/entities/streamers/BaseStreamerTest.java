@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.hedw1q.TgBot.twitch.TwBot;
 import ru.hedw1q.TgBot.twitch.entities.StreamStatus;
 import ru.hedw1q.TgBot.twitch.services.StreamServiceImpl;
 
@@ -51,7 +50,7 @@ public class BaseStreamerTest {
 
     @BeforeEach
      void setUp() {
-        TwBot.TG_CHANNEL_ID = TEST_TELEGRAM_CHANNEL_ID;
+        BaseStreamer.TG_CHANNEL_ID = TEST_TELEGRAM_CHANNEL_ID;
 
         Stream streamSpy = Mockito.mock(Stream.class);
         EventChannel channelSpy = Mockito.mock(EventChannel.class);
