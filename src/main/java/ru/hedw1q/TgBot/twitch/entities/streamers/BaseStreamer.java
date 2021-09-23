@@ -120,7 +120,7 @@ public abstract class BaseStreamer implements BaseStreamerI {
     public void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         Stream newStream = new Stream(channelGoLiveEvent.getChannel().getName(), LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC));
 
-        String message = "❗️Поток от " + channelGoLiveEvent.getChannel().getName() + " на Twitch ❗️\n" +
+        String message = "❗️Поток от " + channelName + " на Twitch ❗️\n" +
                 "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
                 "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
                 "\n" +
@@ -178,7 +178,7 @@ public abstract class BaseStreamer implements BaseStreamerI {
     @Override
     public void onChannelChangeGame(ChannelChangeGameEvent channelChangeGameEvent) {
 
-        String message = "❗️" + channelChangeGameEvent.getChannel().getName() + " сменил/a игру на стриме ❗️\n" +
+        String message = "❗️" + channelName + " сменил/a игру на стриме ❗️\n" +
                 "Категория: " + channelChangeGameEvent.getStream().getGameName() + "\n" +
                 "Название: " + channelChangeGameEvent.getStream().getTitle();
 

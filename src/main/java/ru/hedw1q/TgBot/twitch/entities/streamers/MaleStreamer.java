@@ -25,7 +25,7 @@ public class MaleStreamer extends BaseStreamer {
 
         Stream newStream = new Stream(channelName, LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC));
 
-        String message = "❗️" + channelGoLiveEvent.getChannel().getName() + "завел на Twitch ❗️\n" +
+        String message = "❗️" + channelName + " завел на Twitch ❗️\n" +
                 "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
                 "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
                 "\n" +
@@ -46,7 +46,7 @@ public class MaleStreamer extends BaseStreamer {
     @Override
     public void onChannelChangeGame(ChannelChangeGameEvent channelChangeGameEvent) {
         try {
-            String message = "❗️" + channelChangeGameEvent.getChannel().getName() + " сменил игру на стриме ❗️\n" +
+            String message = "❗️" + channelName + " сменил игру на стриме ❗️\n" +
                     "Категория: " + channelChangeGameEvent.getStream().getGameName() + "\n" +
                     "Название: " + channelChangeGameEvent.getStream().getTitle();
 

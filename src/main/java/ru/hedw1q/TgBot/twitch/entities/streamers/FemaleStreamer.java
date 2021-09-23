@@ -30,7 +30,7 @@ public class FemaleStreamer extends BaseStreamer{
     public void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         Stream newStream = new Stream(channelName, LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC));
 
-        String message = "❗️" + channelGoLiveEvent.getChannel().getName() + "завела на Twitch ❗️\n" +
+        String message = "❗️" + channelName + "завела на Twitch ❗️\n" +
                 "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
                 "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
                 "\n" +
@@ -53,7 +53,7 @@ public class FemaleStreamer extends BaseStreamer{
     @Override
     public void onChannelChangeGame(ChannelChangeGameEvent channelChangeGameEvent) {
 
-        String message = "❗️" + channelChangeGameEvent.getChannel().getName() + " сменила игру на стриме ❗️\n" +
+        String message = "❗️" + channelName + " сменила игру на стриме ❗️\n" +
                 "Категория: " + channelChangeGameEvent.getStream().getGameName() + "\n" +
                 "Название: " + channelChangeGameEvent.getStream().getTitle();
 
