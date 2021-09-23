@@ -153,7 +153,7 @@ public abstract class BaseStreamer implements BaseStreamerI {
         try {
             streamId = finishedStream.getId();
             finishedStream.setStreamFinishTime(LocalDateTime.ofInstant(channelGoOfflineEvent.getFiredAtInstant(), ZoneOffset.UTC));
-            streamDuration = Duration.between(finishedStream.getStreamStartTime().toInstant(ZoneOffset.UTC), finishedStream.getStreamFinishTime());
+            streamDuration = Duration.between(finishedStream.getStreamStartTime().toInstant(ZoneOffset.UTC), finishedStream.getStreamFinishTime().toInstant(ZoneOffset.UTC));
         } catch (Exception e) {
             streamDuration = Duration.ZERO;
             logger.error(ExceptionUtils.getFullStackTrace(e));
