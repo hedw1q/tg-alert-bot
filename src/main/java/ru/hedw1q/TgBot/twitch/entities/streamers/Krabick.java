@@ -2,9 +2,11 @@ package ru.hedw1q.TgBot.twitch.entities.streamers;
 
 import com.github.twitch4j.chat.events.channel.SubscriptionEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
+import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -53,6 +55,35 @@ public class Krabick extends MaleStreamer{
             channelViewerCount = 0;
         }
     }
+
+    @Override
+    public void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
+        Duration streamDuration;
+        Integer streamId = null;
+        Stream finishedStream = streamService.getLastStreamByChannelName(channelGoOfflineEvent.getChannel().getName());
+        try {
+            streamId = finishedStream.getId();
+            streamDuration = Duration.between(finishedStream.getStreamStartTime(),
+                    LocalDateTime.ofInstant(channelGoOfflineEvent.getFiredAtInstant(),ZoneOffset.UTC));
+        } catch (Exception e) {
+            streamDuration = Duration.ZERO;
+            audit(e);
+        }
+        try {
+            String message = "⚫️ Стрим <a href=\"https://twitch.tv/Krabick\">Krabick</a> на Twitch окончен ⚫️ \n" +
+                    "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
+                    "Зрителей: " + channelViewerCount;
+
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
+
+            streamService.setStreamOfflineById(channelGoOfflineEvent.getFiredAtInstant(), streamId);
+        } catch (Exception e) {
+            audit(e);
+        } finally {
+            channelViewerCount = 0;
+        }
+    }
+
 
     private static String getRandomSubMessage(){
         List<String> messageList=new ArrayList<>(Arrays.asList(

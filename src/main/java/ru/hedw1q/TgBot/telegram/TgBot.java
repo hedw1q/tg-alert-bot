@@ -127,6 +127,7 @@ public class TgBot extends TelegramLongPollingCommandBot {
         SendMessage answer = new SendMessage();
         answer.setText(text);
         answer.setChatId(chatId.toString());
+        answer.setParseMode("HTML");
         try {
            return execute(answer);
         } catch (TelegramApiException e) {

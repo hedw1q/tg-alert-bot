@@ -17,7 +17,7 @@ import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
 public class TgBotTest {
     @Autowired
     TgBot tgBot;
-    String testmsg = "TestMessage!;!@#!@# \uD83D\uDE34";
+    String testmsg = "Test Message!;!@#!@# \uD83D\uDE34";
 
     @Test
     void sendTextMessageToChannelTest() {
