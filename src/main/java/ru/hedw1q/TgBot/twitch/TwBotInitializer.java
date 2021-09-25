@@ -1,18 +1,13 @@
 package ru.hedw1q.TgBot.twitch;
 
-import com.github.twitch4j.TwitchClient;
-import com.github.twitch4j.chat.TwitchChat;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import ru.hedw1q.TgBot.telegram.TgBot;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
-import ru.hedw1q.TgBot.twitch.entities.streamers.*;
+import ru.hedw1q.TgBot.twitch.entities.streamers.Krabick;
+import ru.hedw1q.TgBot.twitch.entities.streamers.MaleStreamer;
+import ru.hedw1q.TgBot.twitch.entities.streamers.Ramona;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,14 +28,18 @@ public class TwBotInitializer {
     }
 
     @Bean
+    @Qualifier("krabick")
     public MaleStreamer initKrabickBot() {
-        return new MaleStreamer("Krabick", twitchAuth);
+        return new Krabick("krabick", twitchAuth);
     }
 
     @Bean
+    @Qualifier("ramona")
     public Ramona initRamonaBot() {
         return new Ramona("honeyramonaflowers", twitchAuth);
     }
 
-
+    public static AuthData getAuthData(){
+        return twitchAuth;
+    }
 }

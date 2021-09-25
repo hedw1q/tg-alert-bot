@@ -29,7 +29,7 @@ public class TgBotTest {
 
     @Test
     void sendTextUrlMessageToChannelTest() {
-        final String msgUrl = "@everyone Ну получается тогда завожу тест, ПОИНТОВЫЙ АУК на игры и the last spell\n" +
+        final String msgUrl = "ТЕСТОВОЕ СООБЩЕНИЕ!\n@everyone Ну получается тогда завожу тест, ПОИНТОВЫЙ АУК на игры и the last spell\n" +
                 "\n" +
                 "https://www.twitch.tv/krabick\n" +
                 "https://www.twitch.tv/krabick\n" +
@@ -51,7 +51,8 @@ public class TgBotTest {
     void sendAttachmentMessageToChannelTest() {
         final String jpgUrl = "https://www.massagebythesea.com.au/wp-content/uploads/2018/12/Test-JPEG-1-300x150.jpg";
         final String pngUrl = "https://www.massagebythesea.com.au/wp-content/uploads/2018/12/Test-Logo.svg.png";
-        final String gifUrl = "https://i.gifer.com/769R.gif";
+        final String gifUrl = "https://www.latitudefestival.com/wp-content/uploads/2019/04/test.gif";
+
         try {
             Message jpgMsg = tgBot.sendAttachmentMessageToChannel(TEST_TELEGRAM_CHANNEL_ID, jpgUrl, testmsg);
             TimeUnit.SECONDS.sleep(1);
@@ -68,7 +69,8 @@ public class TgBotTest {
             assertThat(pngMsg.getPhoto().get(0).getFileUniqueId()).isNotEmpty();
 
             assertThat(gifMsg.getCaption()).isEqualTo(testmsg);
-            assertThat(gifMsg.getAnimation().getFileUniqueId()).isNotEmpty();
-        } catch (InterruptedException ie) { }
+            assertThat(gifMsg.getVideo().getFileUniqueId()).isNotEmpty();
+        } catch (InterruptedException ie) {
+        }
     }
 }

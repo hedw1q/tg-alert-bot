@@ -21,8 +21,6 @@ public class MaleStreamer extends BaseStreamer {
 
     @Override
     public void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
-        tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, channelGoLiveEvent.toString());
-
         Stream newStream = new Stream(channelName, LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC));
 
         String message = "❗️" + channelName + " завел на Twitch ❗️\n" +
@@ -37,7 +35,7 @@ public class MaleStreamer extends BaseStreamer {
             streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelName);
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
-            logger.error(ExceptionUtils.getFullStackTrace(e));
+            audit(e);
         } finally {
             channelViewerCount = 0;
         }
@@ -55,7 +53,7 @@ public class MaleStreamer extends BaseStreamer {
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(e));
-            logger.error(ExceptionUtils.getFullStackTrace(e));
+            audit(e);
         }
     }
 

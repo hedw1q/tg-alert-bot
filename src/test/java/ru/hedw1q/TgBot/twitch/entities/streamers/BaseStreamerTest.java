@@ -10,8 +10,14 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import ru.hedw1q.TgBot.telegram.TgBot;
+import ru.hedw1q.TgBot.twitch.TwBotInitializer;
+import ru.hedw1q.TgBot.twitch.config.AuthData;
 import ru.hedw1q.TgBot.twitch.entities.StreamStatus;
+import ru.hedw1q.TgBot.twitch.services.StreamService;
 import ru.hedw1q.TgBot.twitch.services.StreamServiceImpl;
 
 import java.time.Instant;
@@ -31,10 +37,11 @@ import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BaseStreamerTest {
 
-    BaseStreamer testStreamer=new BaseStreamer() {};
-
     @Autowired
-    private StreamServiceImpl streamService;
+    @Qualifier("ramona")
+    BaseStreamer testStreamer;
+    @Autowired
+    StreamService streamService;
     @Mock
     private ChannelChangeGameEvent spyChannelChangeGameEvent;
     @Mock
@@ -47,10 +54,9 @@ public class BaseStreamerTest {
     private static int TEST_STREAM_ID;
 
 
-
     @BeforeEach
-     void setUp() {
-        BaseStreamer.TG_CHANNEL_ID = TEST_TELEGRAM_CHANNEL_ID;
+    void setUp() {
+        Ramona.TG_CHANNEL_ID = TEST_TELEGRAM_CHANNEL_ID;
 
         Stream streamSpy = Mockito.mock(Stream.class);
         EventChannel channelSpy = Mockito.mock(EventChannel.class);
@@ -68,8 +74,8 @@ public class BaseStreamerTest {
         Mockito.when(streamSpy.getViewerCount()).thenReturn(228);
         Mockito.when(streamSpy.getTitle()).thenReturn("Title");
         Mockito.when(streamSpy.getGameName()).thenReturn("GameName");
-        Mockito.when(channelSpy.getName()).thenReturn("ChannelName");
-        Mockito.when(streamSpy.getThumbnailUrl(1600,900)).thenReturn("https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png");
+        Mockito.when(channelSpy.getName()).thenReturn(testStreamer.getChannelName());
+        Mockito.when(streamSpy.getThumbnailUrl(1600, 900)).thenReturn("https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png");
     }
 
 
@@ -78,21 +84,21 @@ public class BaseStreamerTest {
     void channelGoLiveTest() {
         testStreamer.onChannelGoLive(this.spyChannelGoLiveEvent);
         try {
-            ru.hedw1q.TgBot.twitch.entities.Stream stream = streamService.getLastStreamByChannelName("ChannelName");
-            TEST_STREAM_ID=stream.getId();
+            ru.hedw1q.TgBot.twitch.entities.Stream stream = streamService.getLastStreamByChannelName(testStreamer.getChannelName());
+            TEST_STREAM_ID = stream.getId();
 
             assertThat(stream.getStreamStatus()).isEqualTo(StreamStatus.LIVE);
-            assertThat(stream.getChannelName()).isEqualTo("ChannelName");
-            assertThat(stream.getStreamStartTime()).isEqualTo( LocalDateTime.ofInstant(Instant.ofEpochSecond(1261440000), ZoneOffset.UTC));
+            assertThat(stream.getId()).isNotNull();
+            assertThat(stream.getStreamStartTime()).isEqualTo(LocalDateTime.ofInstant(Instant.ofEpochSecond(1261440000), ZoneOffset.UTC));
             assertThat(stream.getStreamFinishTime()).isNull();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Test
     @Order(2)
-    void channelChangeGameTest(){
+    void channelChangeGameTest() {
         testStreamer.onChannelChangeGame(this.spyChannelChangeGameEvent);
     }
 
@@ -104,16 +110,17 @@ public class BaseStreamerTest {
         try {
             testStreamer.onChannelGoOffline(this.spyChannelGoOfflineEvent);
 
-            ru.hedw1q.TgBot.twitch.entities.Stream stream=streamService.getStreamById(TEST_STREAM_ID);
+            ru.hedw1q.TgBot.twitch.entities.Stream stream = streamService.getStreamById(TEST_STREAM_ID);
 
             assertThat(stream.getStreamStatus()).isEqualTo(StreamStatus.OFFLINE);
             assertThat(stream.getStreamFinishTime()).isNotNull();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     @AfterAll
-    void tearDown(){
+    void tearDown() {
         streamService.deleteStreamById(TEST_STREAM_ID);
     }
 }

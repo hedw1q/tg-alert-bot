@@ -30,8 +30,6 @@ public class MessageUpdateListener extends MessageListener implements EventListe
         if (!validateMessage(event)) {
             return Mono.empty();
         }
-
-
         DiscordMessage discordMessage = new DiscordMessage("UPD: "+event.getMessage().block().getContent());
         discordMessage.formatOutputText(stickerMap);
 
@@ -44,16 +42,13 @@ public class MessageUpdateListener extends MessageListener implements EventListe
         }
 
         tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, discordMessage.getMessageText());
-
         return Mono.empty();
-
     }
 
 
     private boolean validateMessage(MessageUpdateEvent event) {
-        if (!DS_CHANNEL_IDS.contains(event.getChannelId().asLong())
-                || event.getMessage().block().getAuthor().orElseThrow().isBot()
-                || !event.getMessage().block().getAuthor().orElseThrow().getUsername().trim().equals("hedw1q"))
+        if (!DS_CHANNEL_IDS.contains(event.getMessage().block().getChannelId().asLong())
+                || event.getMessage().block().getAuthor().orElseThrow().isBot())
             return false;
         return true;
     }

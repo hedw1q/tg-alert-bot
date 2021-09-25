@@ -36,6 +36,7 @@ import java.util.function.Consumer;
 public abstract class BaseStreamer implements BaseStreamerI {
 
     public static long TG_CHANNEL_ID = -1001537091172L;
+    protected static long AUDIT_TG_CHANNEL_ID = 890471143L;
 
     protected static final Logger logger = LoggerFactory.getLogger(BaseStreamer.class);
 
@@ -55,7 +56,8 @@ public abstract class BaseStreamer implements BaseStreamerI {
     TwitchChat twitchChat;
     TwitchClient twitchClient;
 
-    public BaseStreamer() { }
+    public BaseStreamer() {
+    }
 
     public BaseStreamer(String channelName, AuthData authData) {
         this.channelName = channelName;
@@ -88,11 +90,11 @@ public abstract class BaseStreamer implements BaseStreamerI {
     }
 
     @PostConstruct
-    void afterInit(){
+    void afterInit() {
     }
 
     @PreDestroy
-    void beforeDestroy(){
+    void beforeDestroy() {
     }
 
     void registerEventHandlers(EventManager eventManager) {
@@ -108,7 +110,7 @@ public abstract class BaseStreamer implements BaseStreamerI {
                 onEvent(SubscriptionEvent.class, this::onChannelSubscriptionEvent);
     }
 
-    public <T> void registerNewEvent(Class<T> eventClass, Consumer<T> consumer){
+    public <T> void registerNewEvent(Class<T> eventClass, Consumer<T> consumer) {
         twitchClient.getEventManager().onEvent(eventClass, consumer);
     }
 
@@ -134,7 +136,7 @@ public abstract class BaseStreamer implements BaseStreamerI {
             streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelGoLiveEvent.getChannel().getName());
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
-            logger.error(ExceptionUtils.getFullStackTrace(e));
+            audit(e);
         } finally {
             channelViewerCount = 0;
         }
@@ -152,11 +154,11 @@ public abstract class BaseStreamer implements BaseStreamerI {
         Stream finishedStream = streamService.getLastStreamByChannelName(channelGoOfflineEvent.getChannel().getName());
         try {
             streamId = finishedStream.getId();
-            finishedStream.setStreamFinishTime(LocalDateTime.ofInstant(channelGoOfflineEvent.getFiredAtInstant(), ZoneOffset.UTC));
-            streamDuration = Duration.between(finishedStream.getStreamStartTime().toInstant(ZoneOffset.UTC), finishedStream.getStreamFinishTime().toInstant(ZoneOffset.UTC));
+            streamDuration = Duration.between(finishedStream.getStreamStartTime(),
+                  LocalDateTime.ofInstant(channelGoOfflineEvent.getFiredAtInstant(),ZoneOffset.UTC));
         } catch (Exception e) {
             streamDuration = Duration.ZERO;
-            logger.error(ExceptionUtils.getFullStackTrace(e));
+            audit(e);
         }
         try {
             String message = "⚫️ Стрим на Twitch окончен ⚫️ \n" +
@@ -167,9 +169,9 @@ public abstract class BaseStreamer implements BaseStreamerI {
 
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
 
-            streamService.setStreamOfflineById(finishedStream.getStreamFinishTime().toInstant(ZoneOffset.UTC), streamId);
+            streamService.setStreamOfflineById(channelGoOfflineEvent.getFiredAtInstant(), streamId);
         } catch (Exception e) {
-            logger.error(ExceptionUtils.getFullStackTrace(e));
+            audit(e);
         } finally {
             channelViewerCount = 0;
         }
@@ -188,8 +190,13 @@ public abstract class BaseStreamer implements BaseStreamerI {
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
-            logger.error(ExceptionUtils.getFullStackTrace(e));
+            audit(e);
         }
+    }
+
+    public void audit(Exception exception) {
+        tgBot.sendTextMessageToChannel(AUDIT_TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(exception));
+        logger.error(ExceptionUtils.getFullStackTrace(exception));
     }
 }
 

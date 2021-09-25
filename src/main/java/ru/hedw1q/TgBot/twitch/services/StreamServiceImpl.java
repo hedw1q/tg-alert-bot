@@ -9,6 +9,7 @@ import ru.hedw1q.TgBot.twitch.repositories.StreamRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.StreamCorruptedException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -17,35 +18,46 @@ import java.time.ZoneOffset;
  * @author hedw1q
  */
 @Service
-public class StreamServiceImpl implements StreamService{
+public class StreamServiceImpl implements StreamService {
     @PersistenceContext
     EntityManager em;
     @Autowired
     private StreamRepository streamRepository;
 
     @Override
-    public void createNewStream(Instant startTime, String channelName){
-        Stream stream=new Stream(channelName, LocalDateTime.ofInstant(startTime, ZoneOffset.UTC));
-        streamRepository.save(stream);
+    public Stream createNewStream(Instant startTime, String channelName) {
+        Stream stream = new Stream(channelName, LocalDateTime.ofInstant(startTime, ZoneOffset.UTC));
+        try {
+            return streamRepository.save(stream);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
-    public Stream getLastStreamByChannelName(String channelName){
+    public Stream getLastStreamByChannelName(String channelName) {
         return streamRepository.findCurrentStreamByChannelName(channelName);
     }
 
     @Override
-    public void setStreamOfflineById(Instant finishTime,Integer streamId){
-        streamRepository.updateStreamSetOfflineById(LocalDateTime.ofInstant(finishTime, ZoneOffset.UTC),streamId);
+    public void setStreamOfflineById(Instant finishTime, Integer streamId) {
+        streamRepository.updateStreamSetOfflineById(LocalDateTime.ofInstant(finishTime, ZoneOffset.UTC), streamId);
     }
 
     @Override
-    public Stream getStreamById(Integer streamId){
-        return streamRepository.findById(streamId).orElseThrow();
+    public Stream getStreamById(Integer streamId) {
+        return streamRepository.findById(streamId).orElseThrow(() -> {
+            throw new RuntimeException();
+        });
     }
 
     @Override
-    public void deleteStreamById(Integer streamId){
-        streamRepository.deleteById(streamId);
+    public boolean deleteStreamById(Integer streamId) {
+        try{
+            streamRepository.deleteById(streamId);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 }

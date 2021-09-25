@@ -32,8 +32,7 @@ public class DiscordMessage {
     }
 
     public DiscordMessage addMessageAuthor(String messageAuthor){
-        setMessageText("From "+
-                messageAuthor +
+        setMessageText(messageAuthor +
                 ": "+
                 getMessageText()
         );

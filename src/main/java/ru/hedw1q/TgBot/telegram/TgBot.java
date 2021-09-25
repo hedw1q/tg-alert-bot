@@ -10,6 +10,7 @@ import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingC
 import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -78,6 +79,15 @@ public class TgBot extends TelegramLongPollingCommandBot {
                         return sendImageMessageToChannel(chatId, conn.getInputStream(), text);
                     case "image/gif":
                         return sendAnimationMessageToChannel(chatId, conn.getInputStream(), text);
+                    case "video/mpeg":
+                    case "video/mp4":
+                    case "video/ogg":
+                    case "video/quicktime":
+                    case "video/webm":
+                    case "video/x-ms-wmv":
+                    case "video/x-flv":
+                    case "video/x-msvideo":
+                        return sendAnimationMessageToChannel(chatId, conn.getInputStream(),text);
                     default:
                         return null;
                 }
@@ -100,8 +110,8 @@ public class TgBot extends TelegramLongPollingCommandBot {
     }
 
     private Message sendAnimationMessageToChannel(Long chatId, InputStream inputStream, String text) throws TelegramApiException {
-        SendAnimation msg = new SendAnimation();
-        msg.setAnimation(new InputFile(inputStream, "gif"));
+        SendVideo msg = new SendVideo();
+        msg.setVideo(new InputFile(inputStream, "video"));
         msg.setChatId(chatId.toString());
         msg.setCaption(text);
         return execute(msg);

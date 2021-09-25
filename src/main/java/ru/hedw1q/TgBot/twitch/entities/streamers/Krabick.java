@@ -12,18 +12,17 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author hedw1q
  */
-public class Ramona extends FemaleStreamer {
+public class Krabick extends MaleStreamer{
 
-
-    public Ramona(String channelName, AuthData authData) {
+    public Krabick(String channelName, AuthData authData) {
         super(channelName, authData);
     }
 
     @Override
     public void onChannelSubscriptionEvent(SubscriptionEvent event) {
         try{
-            TimeUnit.SECONDS.sleep(1500);
-            twitchChat.sendMessage(event.getChannel().getName(), "honeyr1WOW honeyr1WOW honeyr1WOW ");
+            TimeUnit.MILLISECONDS.sleep(1500);
+            twitchChat.sendMessage(event.getChannel().getName(),"");
         }catch (InterruptedException ie){ }
     }
 
@@ -31,7 +30,7 @@ public class Ramona extends FemaleStreamer {
     public void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         Stream newStream = new Stream(channelGoLiveEvent.getChannel().getName(), LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC));
 
-        String message = "❗️Рамона завела, хихихи ❗️\n" +
+        String message = "❗️Крабицк завел на Twitch ❗️\n" +
                 "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
                 "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
                 "\n" +
@@ -50,5 +49,4 @@ public class Ramona extends FemaleStreamer {
             channelViewerCount = 0;
         }
     }
-
 }

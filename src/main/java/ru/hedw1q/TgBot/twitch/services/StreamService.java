@@ -15,7 +15,7 @@ public interface StreamService {
 
     Logger logger = LoggerFactory.getLogger(StreamService.class);
 
-    void createNewStream(Instant startTime, String channelName);
+    Stream createNewStream(Instant startTime, String channelName);
 
     Stream getLastStreamByChannelName(String channelName);
 
@@ -23,5 +23,5 @@ public interface StreamService {
 
     Stream getStreamById(Integer streamId);
 
-    void deleteStreamById(Integer streamId);
+    boolean deleteStreamById(Integer streamId);
 }
