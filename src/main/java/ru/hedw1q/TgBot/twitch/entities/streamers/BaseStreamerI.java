@@ -5,6 +5,7 @@ import com.github.twitch4j.events.ChannelChangeGameEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import com.github.twitch4j.events.ChannelViewerCountUpdateEvent;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
  * @author hedw1q

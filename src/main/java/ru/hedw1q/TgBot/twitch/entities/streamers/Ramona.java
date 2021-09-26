@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author hedw1q
  */
-public class Ramona extends FemaleStreamer {
+public class Ramona extends FemaleTwitchStreamer {
 
 
     public Ramona(String channelName, AuthData authData) {
@@ -31,7 +31,7 @@ public class Ramona extends FemaleStreamer {
 
     @Override
     public void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
-        Stream newStream = new Stream(channelGoLiveEvent.getChannel().getName(), LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC));
+        Stream newStream = new Stream(channelGoLiveEvent.getChannel().getName(), LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC), "Twitch");
 
         String message = "❗️Рамона завела, хихихи ❗️\n" +
                 "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
@@ -44,7 +44,7 @@ public class Ramona extends FemaleStreamer {
         try {
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
 
-            streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelGoLiveEvent.getChannel().getName());
+            streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelGoLiveEvent.getChannel().getName(), "Twitch");
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
             audit(e);

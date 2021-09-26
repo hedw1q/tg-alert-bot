@@ -33,7 +33,7 @@ public class StreamServiceTest {
     @Test
     @Order(1)
     void testCreateNewStream() {
-        Stream newStream = streamService.createNewStream(TEST_TIME, TEST_CHANNEL_NAME);
+        Stream newStream = streamService.createNewStream(TEST_TIME, TEST_CHANNEL_NAME, "Twitch");
 
         TEST_STREAM_ID = newStream.getId();
 

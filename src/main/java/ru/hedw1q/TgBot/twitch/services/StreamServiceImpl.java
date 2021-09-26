@@ -25,8 +25,8 @@ public class StreamServiceImpl implements StreamService {
     private StreamRepository streamRepository;
 
     @Override
-    public Stream createNewStream(Instant startTime, String channelName) {
-        Stream stream = new Stream(channelName, LocalDateTime.ofInstant(startTime, ZoneOffset.UTC));
+    public Stream createNewStream(Instant startTime, String channelName, String platform) {
+        Stream stream = new Stream(channelName, LocalDateTime.ofInstant(startTime, ZoneOffset.UTC), platform);
         try {
             return streamRepository.save(stream);
         } catch (Exception e) {

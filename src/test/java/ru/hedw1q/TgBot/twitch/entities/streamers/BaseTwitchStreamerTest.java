@@ -12,13 +12,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
-import ru.hedw1q.TgBot.telegram.TgBot;
-import ru.hedw1q.TgBot.twitch.TwBotInitializer;
-import ru.hedw1q.TgBot.twitch.config.AuthData;
 import ru.hedw1q.TgBot.twitch.entities.StreamStatus;
 import ru.hedw1q.TgBot.twitch.services.StreamService;
-import ru.hedw1q.TgBot.twitch.services.StreamServiceImpl;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -35,11 +30,11 @@ import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class BaseStreamerTest {
+public class BaseTwitchStreamerTest {
 
     @Autowired
     @Qualifier("ramona")
-    BaseStreamer testStreamer;
+    BaseTwitchStreamer testStreamer;
     @Autowired
     StreamService streamService;
     @Mock

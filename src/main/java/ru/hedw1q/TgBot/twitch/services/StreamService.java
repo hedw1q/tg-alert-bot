@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 /**
  * @author hedw1q
@@ -15,7 +13,7 @@ public interface StreamService {
 
     Logger logger = LoggerFactory.getLogger(StreamService.class);
 
-    Stream createNewStream(Instant startTime, String channelName);
+    Stream createNewStream(Instant startTime, String channelName, String platfrom);
 
     Stream getLastStreamByChannelName(String channelName);
 

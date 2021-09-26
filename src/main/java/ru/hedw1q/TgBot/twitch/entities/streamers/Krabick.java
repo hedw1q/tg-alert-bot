@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author hedw1q
  */
-public class Krabick extends MaleStreamer{
+public class Krabick extends MaleTwitchStreamer {
 
     public Krabick(String channelName, AuthData authData) {
         super(channelName, authData);
@@ -34,7 +34,7 @@ public class Krabick extends MaleStreamer{
 
     @Override
     public void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
-        Stream newStream = new Stream(channelGoLiveEvent.getChannel().getName(), LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC));
+        Stream newStream = new Stream(channelGoLiveEvent.getChannel().getName(), LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC), "Twitch");
 
         String message = "❗️Крабик завел на твиче ❗️\n" +
                 "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
@@ -47,7 +47,7 @@ public class Krabick extends MaleStreamer{
         try {
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
 
-            streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelGoLiveEvent.getChannel().getName());
+            streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelGoLiveEvent.getChannel().getName(), "Twitch");
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
             audit(e);

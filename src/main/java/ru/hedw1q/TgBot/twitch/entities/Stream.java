@@ -20,10 +20,11 @@ import java.time.LocalDateTime;
 public class Stream extends BaseEntity {
     public Stream() {}
 
-    public Stream(String channelName, LocalDateTime streamStartTime) {
+    public Stream(String channelName, LocalDateTime streamStartTime, String platform) {
         this.channelName = channelName;
         this.streamStartTime = streamStartTime;
         this.streamStatus = StreamStatus.LIVE;
+        this.platform=platform;
     }
 
     @NotNull
@@ -46,4 +47,8 @@ public class Stream extends BaseEntity {
     @Setter
     private LocalDateTime streamFinishTime;
 
+
+    @Getter
+    @Setter
+    private String platform;
 }

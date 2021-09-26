@@ -33,12 +33,12 @@ import java.util.function.Consumer;
  * @author hedw1q
  */
 
-public abstract class BaseStreamer implements BaseStreamerI {
+public abstract class BaseTwitchStreamer implements BaseStreamerI {
 
     public static long TG_CHANNEL_ID = -1001537091172L;
     protected static long AUDIT_TG_CHANNEL_ID = 890471143L;
 
-    protected static final Logger logger = LoggerFactory.getLogger(BaseStreamer.class);
+    protected static final Logger logger = LoggerFactory.getLogger(BaseTwitchStreamer.class);
 
     @Getter
     @Setter
@@ -56,10 +56,10 @@ public abstract class BaseStreamer implements BaseStreamerI {
     TwitchChat twitchChat;
     TwitchClient twitchClient;
 
-    public BaseStreamer() {
+    public BaseTwitchStreamer() {
     }
 
-    public BaseStreamer(String channelName, AuthData authData) {
+    public BaseTwitchStreamer(String channelName, AuthData authData) {
         this.channelName = channelName;
 
         OAuth2Credential credential = new OAuth2Credential("twitch", authData.getOAuthToken());
@@ -120,7 +120,7 @@ public abstract class BaseStreamer implements BaseStreamerI {
 
     @Override
     public void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
-        Stream newStream = new Stream(channelGoLiveEvent.getChannel().getName(), LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC));
+        Stream newStream = new Stream(channelGoLiveEvent.getChannel().getName(), LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC), "Twitch");
 
         String message = "❗️Поток от " + channelName + " на Twitch ❗️\n" +
                 "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
@@ -133,7 +133,7 @@ public abstract class BaseStreamer implements BaseStreamerI {
         try {
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
 
-            streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelGoLiveEvent.getChannel().getName());
+            streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelGoLiveEvent.getChannel().getName(), "Twitch");
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
             audit(e);
