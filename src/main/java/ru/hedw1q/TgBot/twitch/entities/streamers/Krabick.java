@@ -26,10 +26,10 @@ public class Krabick extends MaleTwitchStreamer {
 
     @Override
     public void onChannelSubscriptionEvent(SubscriptionEvent event) {
-        try{
-            TimeUnit.MILLISECONDS.sleep(1500);
-            twitchChat.sendMessage(event.getChannel().getName(),getRandomSubMessage());
-        }catch (InterruptedException ie){ }
+//        try{
+//            TimeUnit.MILLISECONDS.sleep(1500);
+//            twitchChat.sendMessage(event.getChannel().getName(),getRandomSubMessage());
+//        }catch (InterruptedException ie){ }
     }
 
     @Override
