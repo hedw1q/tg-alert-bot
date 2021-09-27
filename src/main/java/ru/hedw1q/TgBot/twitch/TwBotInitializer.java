@@ -30,7 +30,7 @@ public class TwBotInitializer {
     @Bean
     @Qualifier("krabick")
     public Krabick initKrabickBot() {
-        return new Krabick("krabick", twitchAuth);
+        return new Krabick("Krabick", twitchAuth);
     }
 
     @Bean
