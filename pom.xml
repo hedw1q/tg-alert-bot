@@ -111,25 +111,49 @@
 			<groupId>ru.maximkulikov</groupId>
 			<artifactId>goodgame-api-wrapper</artifactId>
 			<version>1.0.2</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/goodgame-api-wrapper.jar</systemPath>
 		</dependency>
-
 		<dependency>
 			<groupId>com.mb3364.http</groupId>
 			<artifactId>async-http-client</artifactId>
 			<version>2.1.2</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/async-http-client.jar</systemPath>
 		</dependency>
 	</dependencies>
-
+	<repositories>
+		<!--other repositories if any-->
+		<repository>
+			<id>project.local</id>
+			<name>project</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-install-plugin</artifactId>-->
+<!--				<version>2.5.2</version>-->
+<!--				<configuration>-->
+<!--					<groupId>ru.maximkulikov</groupId>-->
+<!--					<artifactId>goodgame-api-wrapper</artifactId>-->
+<!--					<version>1.0.2</version>-->
+<!--					<packaging>jar</packaging>-->
+<!--					<file>${project.basedir}/lib/goodgame-api-wrapper.jar</file>-->
+<!--					<generatePom>true</generatePom>-->
+<!--				</configuration>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<id>install-jar-lib</id>-->
+<!--						<goals>-->
+<!--							<goal>install-file</goal>-->
+<!--						</goals>-->
+<!--						<phase>validate</phase>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 
