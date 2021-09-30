@@ -49,7 +49,7 @@ public class Krabick extends MaleTwitchStreamer {
 
             streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelGoLiveEvent.getChannel().getName(), "Twitch");
         } catch (Exception e) {
-            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message, true);
             audit(e);
         } finally {
             channelViewerCount = 0;

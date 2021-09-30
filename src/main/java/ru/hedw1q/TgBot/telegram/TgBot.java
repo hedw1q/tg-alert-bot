@@ -59,6 +59,10 @@ public class TgBot extends TelegramLongPollingCommandBot {
         return setAnswer(chatId, text);
     }
 
+    public Message sendTextMessageToChannel(Long chatId, String text, boolean disablePreview) {
+        return setAnswer(chatId, text,disablePreview);
+    }
+
     public Message sendAttachmentMessageToChannel(Long chatId, String url, String text) {
         try {
             URL urlObject = new URL(url);
@@ -130,6 +134,27 @@ public class TgBot extends TelegramLongPollingCommandBot {
         answer.setParseMode("HTML");
         try {
            return execute(answer);
+        } catch (TelegramApiException e) {
+            logger.error(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Отправка ответа
+     *
+     * @param chatId id чата
+     * @param text   текст ответа
+     * @param disablePreview - включить?выключить превью ссылок
+     */
+    private Message setAnswer(Long chatId, String text, boolean disablePreview) {
+        SendMessage answer = new SendMessage();
+        answer.setText(text);
+        answer.setChatId(chatId.toString());
+        answer.setParseMode("HTML");
+        answer.setDisableWebPagePreview(disablePreview);
+        try {
+            return execute(answer);
         } catch (TelegramApiException e) {
             logger.error(e.getMessage());
             return null;
