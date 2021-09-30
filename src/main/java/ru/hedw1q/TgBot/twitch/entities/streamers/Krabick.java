@@ -36,7 +36,7 @@ public class Krabick extends MaleTwitchStreamer {
     public void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         Stream newStream = new Stream(channelGoLiveEvent.getChannel().getName(), LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC), "Twitch");
 
-        String message = "❗️Крабик завел на твиче ❗️\n" +
+        String message = "\uD83E\uDD80 Крабик завел на твиче \uD83E\uDD80️\n" +
                 "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
                 "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
                 "\n" +
@@ -70,7 +70,7 @@ public class Krabick extends MaleTwitchStreamer {
             audit(e);
         }
         try {
-            String message = "⚫️ Стрим <a href=\"https://twitch.tv/Krabick\">Krabick</a> на Twitch окончен ⚫️ \n" +
+            String message = "⚫️Стрим <a href=\"https://twitch.tv/Krabick\">Krabick</a> на Twitch окончен ⚫️\n" +
                     "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
                     "Зрителей: " + channelViewerCount;
 

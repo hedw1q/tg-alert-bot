@@ -33,7 +33,7 @@ public class Ramona extends FemaleTwitchStreamer {
     public void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         Stream newStream = new Stream(channelGoLiveEvent.getChannel().getName(), LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC), "Twitch");
 
-        String message = "❗️Рамона завела, хихихи ❗️\n" +
+        String message = "\uD83D\uDFE3 Рамона завела, хихихи \uD83D\uDFE3 \n" +
                 "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
                 "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
                 "\n" +
