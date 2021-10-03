@@ -74,7 +74,7 @@ public class Krabick extends MaleTwitchStreamer {
                     "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
                     "Зрителей: " + channelViewerCount;
 
-            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message,true);
 
             streamService.setStreamOfflineById(channelGoOfflineEvent.getFiredAtInstant(), streamId);
         } catch (Exception e) {

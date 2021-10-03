@@ -41,7 +41,7 @@ public class GGBot {
     StreamStatus streamStatus = StreamStatus.OFFLINE;
 
 
-    @Scheduled(fixedRate = 100000)
+    @Scheduled(fixedRate = 60000)
     @Async
     public void handle() {
         gg.streams().getChannel(GG_CHANNEL_NAME, new StreamChannelResponseHandler() {
