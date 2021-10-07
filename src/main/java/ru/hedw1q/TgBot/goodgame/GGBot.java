@@ -28,9 +28,9 @@ import java.time.ZoneOffset;
 @EnableAsync
 public class GGBot {
     public static final Long AUDIT_TG_CHANNEL_ID = 890471143L;
-    public static final Long TG_CHANNEL_ID = -1001537091172L;
+    public static Long TG_CHANNEL_ID = -1001537091172L;
     public static String GG_CHANNEL_NAME = "KinoKrabick";
-    private static final Logger logger = LoggerFactory.getLogger(GGBot.class);
+    private final Logger logger = LoggerFactory.getLogger(GGBot.class);
 
     @Autowired
     StreamService streamService;
@@ -61,47 +61,59 @@ public class GGBot {
                 Stream currentStream = streamService.getLastStreamByChannelName(GG_CHANNEL_NAME);
 
                 if (streamStatus.equals(StreamStatus.LIVE) && currentStream == null) {
-                    String message = "❗️Крабик завел на GoodGame ❗️\n" +
-                            "Название: " + channelContainer.getChannel().getTitle() + "\n" +
-                            "Категория: " + channelContainer.getChannel().getGames().get(0).getTitle() + "\n" +
-                            "\n" +
-                            "Ссылка: https://goodgame.ru/channel/KinoKrabick";
-
-                    String thumbnailUrl = "https:" + channelContainer.getChannel().getThumb();
-                    try {
-                        tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
-
-                        streamService.createNewStream(Instant.now(), GG_CHANNEL_NAME, "GoodGame");
-                    } catch (Exception e) {
-                        tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
-                        audit(e);
-                    }
+                    onChannelGoLive(channelContainer);
                 }
                 else if (streamStatus.equals(StreamStatus.OFFLINE) && currentStream != null) {
-                    Duration streamDuration;
                     try {
-                        streamDuration = Duration.between(currentStream.getStreamStartTime(),
-                                LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC));
-                    } catch (Exception e) {
-                        streamDuration = Duration.ZERO;
-                        audit(e);
-                    }
-                    try {
-                        String message = "⚫️ Стрим <a href=\"https://goodgame.ru/channel/KinoKrabick\">KinoKrabick</a> на GoodGame окончен ⚫️ \n" +
-                                "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
-                                "Зрителей: " + channelContainer.getViewers();
-
-                        tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message,true);
-
-                        streamService.setStreamOfflineById(Instant.now(), currentStream.getId());
-                    } catch (Exception e) {
-                        audit(e);
-                    } finally {
-                        currentStream = null;
+                        onChannelGoOffline(channelContainer, currentStream);
+                    }finally {
+                        currentStream=null;
                     }
                 }
             }
         });
+    }
+
+    void onChannelGoLive(ChannelContainer channelContainer){
+        String message = "❗️Крабик завел на GoodGame ❗️\n" +
+                "Название: " + channelContainer.getChannel().getTitle() + "\n" +
+                "Категория: " + channelContainer.getChannel().getGames().get(0).getTitle() + "\n" +
+                "\n" +
+                "Ссылка: https://goodgame.ru/channel/"+GG_CHANNEL_NAME;
+        try {
+            String thumbnailUrl = "https:" + channelContainer.getChannel().getThumb();
+
+            tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
+
+            streamService.createNewStream(Instant.now(), GG_CHANNEL_NAME, "GoodGame");
+        } catch (Exception e) {
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
+            audit(e);
+        }
+    }
+
+    void onChannelGoOffline(ChannelContainer channelContainer,Stream currentStream){
+        Duration streamDuration;
+        try {
+            streamDuration = Duration.between(currentStream.getStreamStartTime(),
+                    LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC));
+        } catch (Exception e) {
+            streamDuration = Duration.ZERO;
+            audit(e);
+        }
+        try {
+            String message = "⚫️ Стрим <a href=\"https://goodgame.ru/channel/"+GG_CHANNEL_NAME+"\">"+GG_CHANNEL_NAME+"</a> на GoodGame окончен ⚫️ \n" +
+                    "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
+                    "Зрителей: " + channelContainer.getViewers();
+
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message,true);
+
+            streamService.setStreamOfflineById(Instant.now(), currentStream.getId());
+        } catch (Exception e) {
+            audit(e);
+        } finally {
+            currentStream = null;
+        }
     }
 
     private static StreamStatus strToStreamStatus(String str) {

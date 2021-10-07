@@ -51,7 +51,6 @@ public class DsBotInitializer {
         stickerMap.put("honeyOmega", "\uD83D\uDE02");
         stickerMap.put("honeyr1Panic", "\uD83D\uDE31");
         stickerMap.put("peepoBlush", "☺");
-        stickerMap.put("peepoClown", "\uD83E\uDD21");
         stickerMap.put("PepeChill", "\uD83D\uDE0E");
         stickerMap.put("Pepechill", "\uD83D\uDE0E");
         stickerMap.put("HappyCat", "\uD83D\uDE38");
