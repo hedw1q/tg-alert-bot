@@ -81,13 +81,14 @@ public class GGBot {
                 "\n" +
                 "Ссылка: https://goodgame.ru/channel/"+GG_CHANNEL_NAME;
         try {
-            String thumbnailUrl = "https:" + channelContainer.getChannel().getThumb();
+            //String thumbnailUrl = "https:" + channelContainer.getChannel().getThumb();
 
-            tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
+            //tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message,true);
 
             streamService.createNewStream(Instant.now(), GG_CHANNEL_NAME, "GoodGame");
         } catch (Exception e) {
-            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message,true);
             audit(e);
         }
     }
