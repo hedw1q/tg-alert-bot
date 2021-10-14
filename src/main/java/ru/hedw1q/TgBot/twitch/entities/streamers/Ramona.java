@@ -53,32 +53,4 @@ public class Ramona extends FemaleTwitchStreamer {
         }
     }
 
-    @Override
-    public void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
-        Duration streamDuration;
-        Integer streamId = null;
-        Stream finishedStream = streamService.getLastStreamByChannelName(channelGoOfflineEvent.getChannel().getName());
-        try {
-            streamId = finishedStream.getId();
-            streamDuration = Duration.between(finishedStream.getStreamStartTime(),
-                    LocalDateTime.ofInstant(channelGoOfflineEvent.getFiredAtInstant(),ZoneOffset.UTC));
-        } catch (Exception e) {
-            streamDuration = Duration.ZERO;
-            audit(e);
-        }
-        try {
-            String message = "⚫️ Стрим <a href=\"https://twitch.tv/honeyramonaflowers\">honeyramonaflowers</a> на Twitch окончен ⚫️ \n" +
-                    "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
-                    "Зрителей: " + channelViewerCount;
-
-            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message,true);
-
-            streamService.setStreamOfflineById(channelGoOfflineEvent.getFiredAtInstant(), streamId);
-        } catch (Exception e) {
-            audit(e);
-        } finally {
-            channelViewerCount = 0;
-        }
-    }
-
 }

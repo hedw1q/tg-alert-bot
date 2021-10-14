@@ -103,7 +103,7 @@ public class GGBot {
             audit(e);
         }
         try {
-            String message = "⚫️ Стрим <a href=\"https://goodgame.ru/channel/"+GG_CHANNEL_NAME+"\">"+GG_CHANNEL_NAME+"</a> на GoodGame окончен ⚫️ \n" +
+            String message = "Стрим <a href=\"https://goodgame.ru/channel/"+GG_CHANNEL_NAME+"\">"+GG_CHANNEL_NAME+"</a> на GoodGame окончен\n" +
                     "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
                     "Зрителей: " + channelContainer.getViewers();
 

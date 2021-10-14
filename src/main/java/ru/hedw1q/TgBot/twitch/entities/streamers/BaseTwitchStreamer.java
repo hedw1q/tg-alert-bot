@@ -161,7 +161,7 @@ public abstract class BaseTwitchStreamer implements BaseStreamerI {
             audit(e);
         }
         try {
-            String message = "⚫️ Стрим <a href=\"https://twitch.tv/"+channelName+"\">"+channelName+"</a> на Twitch окончен ⚫️ \n" +
+            String message = "Стрим <a href=\"https://twitch.tv/"+channelName+"\">"+channelName+"</a> на Twitch окончен\n" +
                     "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
                     "Зрителей: " + channelViewerCount;
 
