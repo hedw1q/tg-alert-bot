@@ -9,6 +9,7 @@ import ru.hedw1q.TgBot.twitch.entities.Stream;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,7 +25,7 @@ public class Ramona extends FemaleTwitchStreamer {
     @Override
     public void onChannelSubscriptionEvent(SubscriptionEvent event) {
         try{
-            TimeUnit.MILLISECONDS.sleep(1500);
+            TimeUnit.MILLISECONDS.sleep(3000);
             twitchChat.sendMessage(event.getChannel().getName(), "honeyr1WOW honeyr1WOW honeyr1WOW ");
         }catch (InterruptedException ie){ }
     }
