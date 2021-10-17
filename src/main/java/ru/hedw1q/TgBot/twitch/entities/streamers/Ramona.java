@@ -24,10 +24,13 @@ public class Ramona extends FemaleTwitchStreamer {
 
     @Override
     public void onChannelSubscriptionEvent(SubscriptionEvent event) {
-        try{
-            TimeUnit.MILLISECONDS.sleep(3000);
+        try {
+            Random random = new Random();
+            //ot 3 do 8
+            TimeUnit.SECONDS.sleep(random.nextInt(6)+3);
+
             twitchChat.sendMessage(event.getChannel().getName(), "honeyr1WOW honeyr1WOW honeyr1WOW ");
-        }catch (InterruptedException ie){ }
+        } catch (InterruptedException ie) { }
     }
 
     @Override
