@@ -25,6 +25,7 @@ public class Ramona extends FemaleTwitchStreamer {
     @Override
     public void onChannelSubscriptionEvent(SubscriptionEvent event) {
         try {
+            logger.info(event.toString());
             Random random = new Random();
             //ot 3 do 8
             TimeUnit.SECONDS.sleep(random.nextInt(6)+3);
