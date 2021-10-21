@@ -136,7 +136,7 @@ public abstract class BaseTwitchStreamer implements BaseStreamerI {
             streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelGoLiveEvent.getChannel().getName(), "Twitch");
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
-            audit(e);
+            audit(tgBot, e);
         } finally {
             channelViewerCount = 0;
         }
@@ -155,21 +155,21 @@ public abstract class BaseTwitchStreamer implements BaseStreamerI {
         try {
             streamId = finishedStream.getId();
             streamDuration = Duration.between(finishedStream.getStreamStartTime(),
-                    LocalDateTime.ofInstant(channelGoOfflineEvent.getFiredAtInstant(),ZoneOffset.UTC));
+                    LocalDateTime.ofInstant(channelGoOfflineEvent.getFiredAtInstant(), ZoneOffset.UTC));
         } catch (Exception e) {
             streamDuration = Duration.ZERO;
-            audit(e);
+            audit(tgBot, e);
         }
         try {
-            String message = "Стрим <a href=\"https://twitch.tv/"+channelName+"\">"+channelName+"</a> на Twitch окончен\n" +
+            String message = "Стрим <a href=\"https://twitch.tv/" + channelName + "\">" + channelName + "</a> на Twitch окончен\n" +
                     "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
                     "Зрителей: " + channelViewerCount;
 
-            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message,true);
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message, true);
 
             streamService.setStreamOfflineById(channelGoOfflineEvent.getFiredAtInstant(), streamId);
         } catch (Exception e) {
-            audit(e);
+            audit(tgBot, e);
         } finally {
             channelViewerCount = 0;
         }
@@ -188,13 +188,23 @@ public abstract class BaseTwitchStreamer implements BaseStreamerI {
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
-            audit(e);
+            audit(tgBot, e);
         }
     }
 
-    public void audit(Exception exception) {
+    public static void audit(TgBot tgBot, Exception exception) {
         tgBot.sendTextMessageToChannel(AUDIT_TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(exception));
         logger.error(ExceptionUtils.getFullStackTrace(exception));
+    }
+
+    public static void audit(TgBot tgBot, Logger logger, Exception exception) {
+        tgBot.sendTextMessageToChannel(AUDIT_TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(exception));
+        logger.error(ExceptionUtils.getFullStackTrace(exception));
+    }
+
+    public static void audit(TgBot tgBot, String msg) {
+        tgBot.sendTextMessageToChannel(AUDIT_TG_CHANNEL_ID, msg);
+        logger.info(msg);
     }
 }
 

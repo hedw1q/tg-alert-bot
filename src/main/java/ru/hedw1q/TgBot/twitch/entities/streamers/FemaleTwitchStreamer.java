@@ -43,7 +43,7 @@ public class FemaleTwitchStreamer extends BaseTwitchStreamer {
             streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelName, "Twitch");
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
-            audit(e);
+            audit(tgBot,e);
         } finally {
             channelViewerCount = 0;
         }
@@ -61,7 +61,7 @@ public class FemaleTwitchStreamer extends BaseTwitchStreamer {
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
-            audit(e);
+            audit(tgBot,e);
         }
     }
 }

@@ -21,13 +21,14 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+import static ru.hedw1q.TgBot.twitch.entities.streamers.BaseTwitchStreamer.audit;
+
 /**
  * @author hedw1q
  */
 @Component
 @EnableAsync
 public class GGBot {
-    public static final Long AUDIT_TG_CHANNEL_ID = 890471143L;
     public static Long TG_CHANNEL_ID = -1001537091172L;
     public static String GG_CHANNEL_NAME = "KinoKrabick";
     private final Logger logger = LoggerFactory.getLogger(GGBot.class);
@@ -62,56 +63,53 @@ public class GGBot {
 
                 if (streamStatus.equals(StreamStatus.LIVE) && currentStream == null) {
                     onChannelGoLive(channelContainer);
+                } else if (streamStatus.equals(StreamStatus.OFFLINE) && currentStream != null) {
+                    onChannelGoOffline(channelContainer, currentStream);
                 }
-                else if (streamStatus.equals(StreamStatus.OFFLINE) && currentStream != null) {
-                    try {
-                        onChannelGoOffline(channelContainer, currentStream);
-                    }finally {
-                        currentStream=null;
-                    }
-                }
+                streamStatus = null;
+                currentStream = null;
             }
         });
     }
 
-    void onChannelGoLive(ChannelContainer channelContainer){
+    void onChannelGoLive(ChannelContainer channelContainer) {
         String message = "❗️Крабик завел на GoodGame ❗️\n" +
                 "Название: " + channelContainer.getChannel().getTitle() + "\n" +
                 "Категория: " + channelContainer.getChannel().getGames().get(0).getTitle() + "\n" +
                 "\n" +
-                "Ссылка: https://goodgame.ru/channel/"+GG_CHANNEL_NAME;
+                "Ссылка: https://goodgame.ru/channel/" + GG_CHANNEL_NAME;
         try {
             //String thumbnailUrl = "https:" + channelContainer.getChannel().getThumb();
 
             //tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
-            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message,true);
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message, true);
 
             streamService.createNewStream(Instant.now(), GG_CHANNEL_NAME, "GoodGame");
         } catch (Exception e) {
-            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message,true);
-            audit(e);
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message, true);
+            audit(tgBot, logger, e);
         }
     }
 
-    void onChannelGoOffline(ChannelContainer channelContainer,Stream currentStream){
+    void onChannelGoOffline(ChannelContainer channelContainer, Stream currentStream) {
         Duration streamDuration;
         try {
             streamDuration = Duration.between(currentStream.getStreamStartTime(),
                     LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC));
         } catch (Exception e) {
             streamDuration = Duration.ZERO;
-            audit(e);
+            audit(tgBot, logger, e);
         }
         try {
-            String message = "Стрим <a href=\"https://goodgame.ru/channel/"+GG_CHANNEL_NAME+"\">"+GG_CHANNEL_NAME+"</a> на GoodGame окончен\n" +
+            String message = "Стрим <a href=\"https://goodgame.ru/channel/" + GG_CHANNEL_NAME + "\">" + GG_CHANNEL_NAME + "</a> на GoodGame окончен\n" +
                     "Длительность: " + streamDuration.toHours() + " ч. " + (streamDuration.toMinutes() - streamDuration.toHours() * 60) + " мин.\n" +
                     "Зрителей: " + channelContainer.getViewers();
 
-            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message,true);
+            tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message, true);
 
             streamService.setStreamOfflineById(Instant.now(), currentStream.getId());
         } catch (Exception e) {
-            audit(e);
+            audit(tgBot, logger, e);
         } finally {
             currentStream = null;
         }
@@ -126,8 +124,4 @@ public class GGBot {
         }
     }
 
-    public void audit(Exception exception) {
-        tgBot.sendTextMessageToChannel(AUDIT_TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(exception));
-        logger.error(ExceptionUtils.getFullStackTrace(exception));
-    }
 }

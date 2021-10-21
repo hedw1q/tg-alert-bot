@@ -25,13 +25,14 @@ public class Ramona extends FemaleTwitchStreamer {
     @Override
     public void onChannelSubscriptionEvent(SubscriptionEvent event) {
         try {
-            logger.info(event.toString());
+            audit(tgBot, event.toString());
             Random random = new Random();
             //ot 3 do 8
-            TimeUnit.SECONDS.sleep(random.nextInt(6)+3);
+            TimeUnit.SECONDS.sleep(random.nextInt(6) + 3);
 
             twitchChat.sendMessage(event.getChannel().getName(), "honeyr1WOW honeyr1WOW honeyr1WOW ");
-        } catch (InterruptedException ie) { }
+        } catch (InterruptedException ie) {
+        }
     }
 
     @Override
@@ -52,7 +53,7 @@ public class Ramona extends FemaleTwitchStreamer {
             streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelGoLiveEvent.getChannel().getName(), "Twitch");
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
-            audit(e);
+            audit(tgBot,e);
         } finally {
             channelViewerCount = 0;
         }

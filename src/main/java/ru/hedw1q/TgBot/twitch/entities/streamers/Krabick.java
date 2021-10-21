@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author hedw1q
@@ -50,7 +49,7 @@ public class Krabick extends MaleTwitchStreamer {
             streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelGoLiveEvent.getChannel().getName(), "Twitch");
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message, true);
-            audit(e);
+            audit(tgBot,e);
         } finally {
             channelViewerCount = 0;
         }
