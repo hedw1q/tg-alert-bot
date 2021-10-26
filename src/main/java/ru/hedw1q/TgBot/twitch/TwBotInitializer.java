@@ -27,11 +27,11 @@ public class TwBotInitializer {
                 getenv.get("twitch.clientSecret"));
     }
 
-    @Bean
-    @Qualifier("krabick")
-    public Krabick initKrabickBot() {
-        return new Krabick("Krabick", twitchAuth);
-    }
+//    @Bean
+//    @Qualifier("krabick")
+//    public Krabick initKrabickBot() {
+//        return new Krabick("Krabick", twitchAuth);
+//    }
 
     @Bean
     @Qualifier("ramona")
