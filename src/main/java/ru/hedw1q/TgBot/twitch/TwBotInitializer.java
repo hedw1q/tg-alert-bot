@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
-import ru.hedw1q.TgBot.twitch.entities.streamers.Krabick;
-import ru.hedw1q.TgBot.twitch.entities.streamers.MaleTwitchStreamer;
-import ru.hedw1q.TgBot.twitch.entities.streamers.Ramona;
+import ru.hedw1q.TgBot.twitch.entities.streamers.*;
 
 import java.util.Map;
 
@@ -38,6 +36,10 @@ public class TwBotInitializer {
     public Ramona initRamonaBot() {
         return new Ramona("honeyramonaflowers", twitchAuth);
     }
+
+    @Bean
+    @Qualifier("ellanta")
+    public BaseTwitchStreamer initEllantaBot(){ return new FemaleTwitchStreamer("ellanta", twitchAuth); }
 
     public static AuthData getAuthData() {
         return twitchAuth;
