@@ -29,7 +29,7 @@ public class FemaleTwitchStreamer extends BaseTwitchStreamer {
     public void onChannelGoLive(ChannelGoLiveEvent channelGoLiveEvent) {
         Stream newStream = new Stream(channelName, LocalDateTime.ofInstant(channelGoLiveEvent.getStream().getStartedAtInstant(), ZoneOffset.UTC), "Twitch");
 
-        String message = "❗️" + channelName + "завела на Twitch ❗️\n" +
+        String message = "❗️" + channelName + " завела на Twitch ❗️\n" +
                 "Название: " + channelGoLiveEvent.getStream().getTitle() + "\n" +
                 "Категория: " + channelGoLiveEvent.getStream().getGameName() + "\n" +
                 "\n" +
