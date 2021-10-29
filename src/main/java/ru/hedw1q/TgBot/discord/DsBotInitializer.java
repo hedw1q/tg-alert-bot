@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author hedw1q
  */
-@Component
+//@Component
 public class DsBotInitializer {
     private static final Map<String, String> getenv = System.getenv();
 
@@ -24,7 +24,7 @@ public class DsBotInitializer {
     private static final Logger logger = LoggerFactory.getLogger(DsBotInitializer.class);
     public static final Map<String, String> stickerMap = new HashMap<>();
 
-    @Bean
+//    @Bean
     public <T extends Event> GatewayDiscordClient gatewayDiscordClient(List<EventListener<T>> eventListeners) {
         GatewayDiscordClient client = DiscordClientBuilder.create(DS_TOKEN)
                 .build()
