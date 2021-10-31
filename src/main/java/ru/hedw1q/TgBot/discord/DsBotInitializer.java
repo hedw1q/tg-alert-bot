@@ -24,7 +24,7 @@ public class DsBotInitializer {
     private static final Logger logger = LoggerFactory.getLogger(DsBotInitializer.class);
     public static final Map<String, String> stickerMap = new HashMap<>();
 
-//    @Bean
+    @Bean
     public <T extends Event> GatewayDiscordClient gatewayDiscordClient(List<EventListener<T>> eventListeners) {
         GatewayDiscordClient client = DiscordClientBuilder.create(DS_TOKEN)
                 .build()
@@ -92,5 +92,9 @@ public class DsBotInitializer {
         stickerMap.put("honeyr1D","\uD83D\uDE3C");
         stickerMap.put("honeyr1Cry","\uD83D\uDE3F");
         stickerMap.put("honeyr1Ezy","\uD83D\uDE0E");
+    }
+
+    public String getDS_TOKEN() {
+        return DS_TOKEN;
     }
 }

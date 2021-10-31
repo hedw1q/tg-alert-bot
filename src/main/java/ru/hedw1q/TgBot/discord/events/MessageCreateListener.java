@@ -15,7 +15,7 @@ import static ru.hedw1q.TgBot.discord.DsBotInitializer.stickerMap;
 /**
  * @author hedw1q
  */
-//@Service
+@Service
 public class MessageCreateListener extends MessageListener implements EventListener<MessageCreateEvent> {
 
     static final long TG_CHANNEL_ID = -1001537091172L;
@@ -31,7 +31,6 @@ public class MessageCreateListener extends MessageListener implements EventListe
         if (!validateMessage(event)) {
             return Mono.empty();
         }
-
 
         DiscordMessage discordMessage = new DiscordMessage(event.getMessage().getContent());
         discordMessage.formatOutputText(stickerMap,event.getMessage().getAuthor().orElseThrow().getUsername());

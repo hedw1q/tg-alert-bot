@@ -17,7 +17,7 @@ import static ru.hedw1q.TgBot.discord.events.MessageCreateListener.*;
 /**
  * @author hedw1q
  */
-//@Service
+@Service
 public class MessageUpdateListener extends MessageListener implements EventListener<MessageUpdateEvent> {
 
     @Override
