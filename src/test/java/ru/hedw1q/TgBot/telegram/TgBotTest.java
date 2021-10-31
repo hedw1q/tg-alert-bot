@@ -27,6 +27,8 @@ public class TgBotTest {
     void sendTextMessageToChannelTest() {
        Message msg = tgBot.sendTextMessageToChannel(TEST_TELEGRAM_CHANNEL_ID, testmsg);
 
+
+       assertThat(msg.getMessageId()).isNotNull();
         assertThat(msg.getChatId()).isEqualTo(TEST_TELEGRAM_CHANNEL_ID);
         assertThat(msg.getText()).isEqualTo(testmsg);
     }
