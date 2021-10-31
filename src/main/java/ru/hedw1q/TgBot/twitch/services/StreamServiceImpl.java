@@ -47,7 +47,7 @@ public class StreamServiceImpl implements StreamService {
     @Override
     public Stream getStreamById(Integer streamId) {
         return streamRepository.findById(streamId).orElseThrow(() -> {
-            throw new RuntimeException();
+            throw new NullPointerException();
         });
     }
 

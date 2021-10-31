@@ -46,6 +46,8 @@ public class Ramona extends FemaleTwitchStreamer {
 
     @Override
     public void onChannelSubscriptionEvent(SubscriptionEvent event) {
+        if (!checkEnabled()) return;
+
         if (Duration.between(subExecutionTime, LocalTime.now()).toMillis() < subExecutionDelayInSeconds*1000 || event.getUser().getName().equals("hedw1q")) {
             audit(tgBot, "Skipped sub by " + event.getUser().getName());
             return;
@@ -86,6 +88,10 @@ public class Ramona extends FemaleTwitchStreamer {
         } finally {
             channelViewerCount = 0;
         }
+    }
+
+    private static boolean checkEnabled(){
+        return false;
     }
 
 }

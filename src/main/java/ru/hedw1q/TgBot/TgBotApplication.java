@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @EnableScheduling
 public class TgBotApplication {
 
-	@RequestMapping("/")
-	@ResponseBody
-	String pingApp() {
-		return "Hello World!";
-	}
+    @RequestMapping("/")
+    @ResponseBody
+    String pingApp() {
+        return "Hello World!";
+    }
 
-	public static void main(String[] args){
-			SpringApplication.run(TgBotApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(TgBotApplication.class, args);
+    }
 }

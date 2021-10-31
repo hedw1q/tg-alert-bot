@@ -1,5 +1,6 @@
 package ru.hedw1q.TgBot.twitch.entities;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "STREAMS")
+@EqualsAndHashCode
 @ToString
 public class Stream extends BaseEntity {
     public Stream() {}

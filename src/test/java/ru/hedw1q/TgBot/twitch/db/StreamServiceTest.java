@@ -1,79 +1,105 @@
 package ru.hedw1q.TgBot.twitch.db;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.EmptyResultDataAccessException;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
 import ru.hedw1q.TgBot.twitch.entities.StreamStatus;
+import ru.hedw1q.TgBot.twitch.repositories.StreamRepository;
 import ru.hedw1q.TgBot.twitch.services.StreamService;
+import ru.hedw1q.TgBot.twitch.services.StreamServiceImpl;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.time.*;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author hedw1q
  */
-@SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(MockitoExtension.class)
 public class StreamServiceTest {
 
-    @Autowired
-    private StreamService streamService;
+    @InjectMocks
+    private StreamServiceImpl streamService;
+    @Mock
+    private StreamRepository streamRepository;
 
-    private static int TEST_STREAM_ID;
+    private static int TEST_STREAM_ID = 1;
     private static String TEST_CHANNEL_NAME = "testChannelName";
-    private static Instant TEST_TIME=Instant.ofEpochSecond(1261440000);
+    private static Instant TEST_INSTANT_TIME = Instant.ofEpochSecond(1261440000);
+    private static LocalDateTime TEST_LDT_TIME=LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+    private static String TEST_PLATFORM = "Twitch";
+
 
     @Test
-    @Order(1)
     void testCreateNewStream() {
-        Stream newStream = streamService.createNewStream(TEST_TIME, TEST_CHANNEL_NAME, "Twitch");
+        when(streamRepository.save(Mockito.any(Stream.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
 
-        TEST_STREAM_ID = newStream.getId();
+        Stream stream=streamService.createNewStream(TEST_INSTANT_TIME, TEST_CHANNEL_NAME, TEST_PLATFORM);
 
-        assertThat(TEST_STREAM_ID).isNotNull();
-        assertThat(newStream.getStreamFinishTime()).isNull();
-        assertThat(newStream.getStreamStatus()).isEqualTo(StreamStatus.LIVE);
-        assertThat(newStream.getStreamStartTime()).isEqualTo(LocalDateTime.ofInstant(TEST_TIME, ZoneOffset.UTC));
-        assertThat(newStream.getChannelName()).isEqualTo(TEST_CHANNEL_NAME);
+        assertThat(stream.getStreamStatus()).isEqualTo(StreamStatus.LIVE);
+        assertThat(stream.getStreamStartTime()).isNotNull();
+        assertThat(stream.getStreamFinishTime()).isNull();
+    }
+
+    @Test()
+    void testGetStreamById_WhenNotFound() {
+        when(streamRepository.findById(TEST_STREAM_ID)).thenReturn(null);
+
+        assertThrows(NullPointerException.class,()->{
+            streamService.getStreamById(TEST_STREAM_ID);
+        });
     }
 
     @Test
-    @Order(2)
-    void testGetStreamById(){
-        Stream stream=streamService.getStreamById(TEST_STREAM_ID);
+    void testGetLastStreamByChannelName() {
+        Stream stream=new Stream();
+        stream.setChannelName(TEST_CHANNEL_NAME);
+        stream.setStreamStartTime(LocalDateTime.now());
+        stream.setPlatform(TEST_PLATFORM);
+        stream.setStreamStatus(StreamStatus.LIVE);
+        stream.setId(TEST_STREAM_ID);
+        when(streamRepository.findCurrentStreamByChannelName(TEST_CHANNEL_NAME)).thenReturn(stream);
 
-        assertThat(stream.getChannelName()).isEqualTo(TEST_CHANNEL_NAME);
+        Stream getStream = streamService.getLastStreamByChannelName(TEST_CHANNEL_NAME);
+
+        assertThat(stream).isEqualTo(getStream);
     }
 
     @Test
-    @Order(3)
-    void testGetLastStreamByChannelName(){
-        Stream stream=streamService.getLastStreamByChannelName(TEST_CHANNEL_NAME);
+    void testSetStreamOfflineById() {
+        Stream stream=new Stream();
+        stream.setChannelName(TEST_CHANNEL_NAME);
+        stream.setPlatform(TEST_PLATFORM);
+        stream.setStreamStatus(StreamStatus.OFFLINE);
+        stream.setStreamFinishTime(TEST_LDT_TIME);
+        stream.setId(TEST_STREAM_ID);
 
-        assertThat(stream.getId()).isEqualTo(TEST_STREAM_ID);
+        streamService.setStreamOfflineById(TEST_INSTANT_TIME,TEST_STREAM_ID);
+
+        verify(streamRepository,times(1)).updateStreamSetOfflineById(any(),anyInt());
     }
 
     @Test
-    @Order(4)
-    void testSetStreamOfflineById(){
-        streamService.setStreamOfflineById(TEST_TIME,TEST_STREAM_ID);
+    void testDeleteStreamById_WhenException() {
+        doThrow(EmptyResultDataAccessException.class).when(streamRepository).deleteById(TEST_STREAM_ID);
 
-        Stream updatedStream=streamService.getStreamById(TEST_STREAM_ID);
-
-        assertThat(updatedStream.getStreamFinishTime()).isEqualTo(LocalDateTime.ofInstant(TEST_TIME, ZoneOffset.UTC));
-        assertThat(updatedStream.getStreamStatus()).isEqualTo(StreamStatus.OFFLINE);
+        assertThat(streamService.deleteStreamById(TEST_STREAM_ID)).isFalse();
     }
 
     @Test
-    @Order(5)
-    void testDeleteStreamById(){
+    void testDeleteStreamById() {
         assertThat(streamService.deleteStreamById(TEST_STREAM_ID)).isTrue();
     }
 }

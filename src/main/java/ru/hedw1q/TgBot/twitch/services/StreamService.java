@@ -13,7 +13,7 @@ public interface StreamService {
 
     Logger logger = LoggerFactory.getLogger(StreamService.class);
 
-    Stream createNewStream(Instant startTime, String channelName, String platfrom);
+    Stream createNewStream(Instant startTime, String channelName, String platform);
 
     Stream getLastStreamByChannelName(String channelName);
 
