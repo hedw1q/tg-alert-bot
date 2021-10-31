@@ -20,7 +20,7 @@ import java.time.ZoneOffset;
 @Service
 public class StreamServiceImpl implements StreamService {
     @PersistenceContext
-    EntityManager em;
+    protected EntityManager em;
     @Autowired
     private StreamRepository streamRepository;
 

@@ -1,8 +1,10 @@
 package ru.hedw1q.TgBot.telegram;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.concurrent.TimeUnit;
@@ -13,15 +15,17 @@ import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
 /**
  * @author hedw1q
  */
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = TgBotTestConfig.class)
 public class TgBotTest {
     @Autowired
     TgBot tgBot;
     String testmsg = "Test Message!;!@#!@# \uD83D\uDE34";
 
+
     @Test
     void sendTextMessageToChannelTest() {
-        Message msg = tgBot.sendTextMessageToChannel(TEST_TELEGRAM_CHANNEL_ID, testmsg);
+       Message msg = tgBot.sendTextMessageToChannel(TEST_TELEGRAM_CHANNEL_ID, testmsg);
 
         assertThat(msg.getChatId()).isEqualTo(TEST_TELEGRAM_CHANNEL_ID);
         assertThat(msg.getText()).isEqualTo(testmsg);

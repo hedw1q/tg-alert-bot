@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
 
 /**
+ * looks so weird
  * @author hedw1q
  */
 @SpringBootTest
