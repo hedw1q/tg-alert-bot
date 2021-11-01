@@ -151,7 +151,7 @@ public abstract class BaseTwitchStreamer implements BaseStreamerI {
     public void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
         Duration streamDuration;
         Integer streamId = null;
-        Stream finishedStream = streamService.getLastStreamByChannelName(channelGoOfflineEvent.getChannel().getName());
+        Stream finishedStream = streamService.getCurrentLiveStreamByChannelName(channelGoOfflineEvent.getChannel().getName());
         try {
             streamId = finishedStream.getId();
             streamDuration = Duration.between(finishedStream.getStreamStartTime(),

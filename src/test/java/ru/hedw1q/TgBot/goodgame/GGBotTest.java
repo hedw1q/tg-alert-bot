@@ -1,22 +1,18 @@
 package ru.hedw1q.TgBot.goodgame;
 
-import com.github.twitch4j.common.events.domain.EventChannel;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import ru.hedw1q.TgBot.telegram.TgBot;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
-import ru.hedw1q.TgBot.twitch.entities.streamers.Ramona;
 import ru.hedw1q.TgBot.twitch.services.StreamService;
-import ru.maximkulikov.goodgame.api.handlers.StreamChannelResponseHandler;
 import ru.maximkulikov.goodgame.api.models.Channel;
 import ru.maximkulikov.goodgame.api.models.ChannelContainer;
 import ru.maximkulikov.goodgame.api.models.Game;
 
-import java.time.Instant;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
@@ -25,6 +21,7 @@ import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
  * @author hedw1q
  */
 @SpringBootTest
+@TestPropertySource(locations="classpath:application-test.properties")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class GGBotTest {
@@ -37,8 +34,6 @@ public class GGBotTest {
     GGBot ggBot;
     @Mock
     private ChannelContainer channelContainerMock;
-
-    private static int TEST_STREAM_ID;
 
     @BeforeEach
     void setUp() {
@@ -65,13 +60,8 @@ public class GGBotTest {
     @Test
     @Order(2)
     void channelOfflineTest(){
-        Stream currentStream = streamService.getLastStreamByChannelName(GGBot.GG_CHANNEL_NAME);
-        TEST_STREAM_ID=currentStream.getId();
+        Stream currentStream = streamService.getCurrentLiveStreamByChannelName(GGBot.GG_CHANNEL_NAME);
         ggBot.onChannelGoOffline(channelContainerMock,currentStream);
     }
 
-    @AfterAll
-    void tearDown() {
-        streamService.deleteStreamById(TEST_STREAM_ID);
-    }
 }

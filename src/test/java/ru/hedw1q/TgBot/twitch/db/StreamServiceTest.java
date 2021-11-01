@@ -1,24 +1,23 @@
 package ru.hedw1q.TgBot.twitch.db;
 
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.EmptyResultDataAccessException;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
 import ru.hedw1q.TgBot.twitch.entities.StreamStatus;
 import ru.hedw1q.TgBot.twitch.repositories.StreamRepository;
-import ru.hedw1q.TgBot.twitch.services.StreamService;
 import ru.hedw1q.TgBot.twitch.services.StreamServiceImpl;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -63,7 +62,7 @@ public class StreamServiceTest {
     }
 
     @Test
-    void testGetLastStreamByChannelName() {
+    void testGetCurrentLiveStreamByChannelName() {
         Stream stream=new Stream();
         stream.setChannelName(TEST_CHANNEL_NAME);
         stream.setStreamStartTime(LocalDateTime.now());
@@ -72,7 +71,7 @@ public class StreamServiceTest {
         stream.setId(TEST_STREAM_ID);
         when(streamRepository.findCurrentStreamByChannelName(TEST_CHANNEL_NAME)).thenReturn(stream);
 
-        Stream getStream = streamService.getLastStreamByChannelName(TEST_CHANNEL_NAME);
+        Stream getStream = streamService.getCurrentLiveStreamByChannelName(TEST_CHANNEL_NAME);
 
         assertThat(stream).isEqualTo(getStream);
     }

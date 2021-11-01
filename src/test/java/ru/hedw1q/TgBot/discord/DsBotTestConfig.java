@@ -1,13 +1,14 @@
 package ru.hedw1q.TgBot.discord;
 
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @author hedw1q
  */
-@Configuration
+@TestConfiguration
 public class DsBotTestConfig {
+
     @Bean
     DsBotInitializer initDSBot(){
         return new DsBotInitializer();

@@ -15,7 +15,7 @@ public interface StreamService {
 
     Stream createNewStream(Instant startTime, String channelName, String platform);
 
-    Stream getLastStreamByChannelName(String channelName);
+    Stream getCurrentLiveStreamByChannelName(String channelName);
 
     void setStreamOfflineById(Instant finishTime,Integer streamId);
 

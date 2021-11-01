@@ -3,6 +3,7 @@ package ru.hedw1q.TgBot.telegram;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -25,10 +26,10 @@ public class TgBotTest {
 
     @Test
     void sendTextMessageToChannelTest() {
-       Message msg = tgBot.sendTextMessageToChannel(TEST_TELEGRAM_CHANNEL_ID, testmsg);
+        Message msg = tgBot.sendTextMessageToChannel(TEST_TELEGRAM_CHANNEL_ID, testmsg);
 
 
-       assertThat(msg.getMessageId()).isNotNull();
+        assertThat(msg.getMessageId()).isNotNull();
         assertThat(msg.getChatId()).isEqualTo(TEST_TELEGRAM_CHANNEL_ID);
         assertThat(msg.getText()).isEqualTo(testmsg);
     }

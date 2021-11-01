@@ -33,7 +33,7 @@ public class TwBotInitializer {
 
     @Bean
     @Qualifier("ramona")
-    public BaseTwitchStreamer initRamonaBot() {
+    public Ramona initRamonaBot() {
         return new Ramona("honeyramonaflowers", twitchAuth);
     }
 

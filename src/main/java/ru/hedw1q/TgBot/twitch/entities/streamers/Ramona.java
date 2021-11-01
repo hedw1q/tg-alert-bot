@@ -13,7 +13,6 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 /**
  * @author hedw1q
@@ -22,6 +21,8 @@ public class Ramona extends FemaleTwitchStreamer {
 
     private LocalTime subExecutionTime;
     private static int subExecutionDelayInSeconds = 2;
+
+    private boolean subEnabled=false;
 
     public Ramona(String channelName, AuthData authData) {
         super(channelName, authData);
@@ -90,8 +91,16 @@ public class Ramona extends FemaleTwitchStreamer {
         }
     }
 
-    private static boolean checkEnabled(){
-        return false;
+    private boolean checkEnabled(){
+        return isSubEnabled();
+    }
+
+    public boolean isSubEnabled() {
+        return subEnabled;
+    }
+
+    public void setSubEnabled(boolean subEnabled) {
+        this.subEnabled = subEnabled;
     }
 
 }

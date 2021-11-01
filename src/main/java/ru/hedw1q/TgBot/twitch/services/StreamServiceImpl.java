@@ -3,6 +3,7 @@ package ru.hedw1q.TgBot.twitch.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
 import ru.hedw1q.TgBot.twitch.repositories.StreamRepository;
@@ -35,7 +36,7 @@ public class StreamServiceImpl implements StreamService {
     }
 
     @Override
-    public Stream getLastStreamByChannelName(String channelName) {
+    public Stream getCurrentLiveStreamByChannelName(String channelName) {
         return streamRepository.findCurrentStreamByChannelName(channelName);
     }
 

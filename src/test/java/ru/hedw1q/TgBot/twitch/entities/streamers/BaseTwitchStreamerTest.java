@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import ru.hedw1q.TgBot.twitch.entities.StreamStatus;
 import ru.hedw1q.TgBot.twitch.services.StreamService;
 
@@ -30,6 +31,7 @@ import static ru.hedw1q.TgBot.TgBotApplicationTests.TEST_TELEGRAM_CHANNEL_ID;
  */
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestPropertySource(locations="classpath:application-test.properties")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BaseTwitchStreamerTest {
 
@@ -80,7 +82,7 @@ public class BaseTwitchStreamerTest {
     void channelGoLiveTest() {
         testStreamer.onChannelGoLive(this.spyChannelGoLiveEvent);
         try {
-            ru.hedw1q.TgBot.twitch.entities.Stream stream = streamService.getLastStreamByChannelName(testStreamer.getChannelName());
+            ru.hedw1q.TgBot.twitch.entities.Stream stream = streamService.getCurrentLiveStreamByChannelName(testStreamer.getChannelName());
             TEST_STREAM_ID = stream.getId();
 
             assertThat(stream.getStreamStatus()).isEqualTo(StreamStatus.LIVE);
@@ -113,10 +115,5 @@ public class BaseTwitchStreamerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @AfterAll
-    void tearDown() {
-        streamService.deleteStreamById(TEST_STREAM_ID);
     }
 }

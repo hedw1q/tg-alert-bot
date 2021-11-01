@@ -59,7 +59,7 @@ public class GGBot {
             public void onSuccess(ChannelContainer channelContainer) {
                 //broadcast_started=1632650400
                 streamStatus = strToStreamStatus(channelContainer.getStatus());
-                Stream currentStream = streamService.getLastStreamByChannelName(GG_CHANNEL_NAME);
+                Stream currentStream = streamService.getCurrentLiveStreamByChannelName(GG_CHANNEL_NAME);
 
                 if (streamStatus.equals(StreamStatus.LIVE) && currentStream == null) {
                     onChannelGoLive(channelContainer);
