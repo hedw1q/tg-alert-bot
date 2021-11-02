@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.hedw1q.TgBot.telegram.TgBot;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
+import ru.hedw1q.TgBot.twitch.entities.Streamer;
 import ru.hedw1q.TgBot.twitch.services.StreamService;
+import ru.hedw1q.TgBot.twitch.services.StreamerService;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -16,13 +19,14 @@ import java.time.ZoneOffset;
  */
 public class FemaleTwitchStreamer extends BaseTwitchStreamer {
 
-    @Autowired
-    public TgBot tgBot;
-    @Autowired
-    public StreamService streamService;
-
     public FemaleTwitchStreamer(String channelName, AuthData authData) {
         super(channelName, authData);
+    }
+
+    @Override
+    @PostConstruct
+    protected void afterInit(){
+        streamerService.addNewStreamerIfNotExist(new Streamer(channelName,"Twitch",'F'));
     }
 
     @Override
@@ -43,7 +47,7 @@ public class FemaleTwitchStreamer extends BaseTwitchStreamer {
             streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelName, "Twitch");
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
-            audit(tgBot,e);
+            audit(tgBot, e);
         } finally {
             channelViewerCount = 0;
         }
@@ -61,7 +65,7 @@ public class FemaleTwitchStreamer extends BaseTwitchStreamer {
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
-            audit(tgBot,e);
+            audit(tgBot, e);
         }
     }
 }

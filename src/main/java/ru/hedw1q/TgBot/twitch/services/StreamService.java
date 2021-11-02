@@ -3,6 +3,7 @@ package ru.hedw1q.TgBot.twitch.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
+import ru.hedw1q.TgBot.twitch.entities.StreamStatus;
 
 import java.time.Instant;
 
@@ -17,9 +18,11 @@ public interface StreamService {
 
     Stream getCurrentLiveStreamByChannelName(String channelName);
 
-    void setStreamOfflineById(Instant finishTime,Integer streamId);
+    void setStreamOfflineById(Instant finishTime, Integer streamId);
 
     Stream getStreamById(Integer streamId);
 
     boolean deleteStreamById(Integer streamId);
+
+    StreamStatus getStreamStatusByChannelName(String channelName);
 }

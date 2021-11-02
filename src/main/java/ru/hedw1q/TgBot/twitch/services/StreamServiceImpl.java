@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
+import ru.hedw1q.TgBot.twitch.entities.StreamStatus;
 import ru.hedw1q.TgBot.twitch.repositories.StreamRepository;
 
 import javax.persistence.EntityManager;
@@ -21,7 +22,7 @@ import java.time.ZoneOffset;
 @Service
 public class StreamServiceImpl implements StreamService {
     @PersistenceContext
-    protected EntityManager em;
+    EntityManager em;
     @Autowired
     private StreamRepository streamRepository;
 
@@ -54,11 +55,17 @@ public class StreamServiceImpl implements StreamService {
 
     @Override
     public boolean deleteStreamById(Integer streamId) {
-        try{
+        try {
             streamRepository.deleteById(streamId);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
+    }
+
+    public StreamStatus getStreamStatusByChannelName(String channelName) {
+        Stream stream = streamRepository.findCurrentStreamByChannelName(channelName);
+        if(stream!=null && stream.getStreamStatus()==StreamStatus.LIVE) return StreamStatus.LIVE;
+        return StreamStatus.OFFLINE;
     }
 }

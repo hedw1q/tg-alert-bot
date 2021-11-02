@@ -4,9 +4,13 @@ package ru.hedw1q.TgBot.twitch.entities.streamers;
 import com.github.twitch4j.events.ChannelChangeGameEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
+import ru.hedw1q.TgBot.twitch.entities.Streamer;
+import ru.hedw1q.TgBot.twitch.services.StreamerService;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -17,6 +21,12 @@ public class MaleTwitchStreamer extends BaseTwitchStreamer {
 
     public MaleTwitchStreamer(String channelName, AuthData authData) {
         super(channelName, authData);
+    }
+
+    @Override
+    @PostConstruct
+    protected void afterInit(){
+        streamerService.addNewStreamerIfNotExist(new Streamer(channelName,"Twitch",'M'));
     }
 
     @Override
@@ -40,7 +50,6 @@ public class MaleTwitchStreamer extends BaseTwitchStreamer {
             channelViewerCount = 0;
         }
     }
-//krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13 krab13 krabBlink krab13
     @Override
     public void onChannelChangeGame(ChannelChangeGameEvent channelChangeGameEvent) {
         try {

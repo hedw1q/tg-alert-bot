@@ -11,11 +11,14 @@ import org.springframework.stereotype.Component;
 import ru.hedw1q.TgBot.telegram.TgBot;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
 import ru.hedw1q.TgBot.twitch.entities.StreamStatus;
+import ru.hedw1q.TgBot.twitch.entities.Streamer;
 import ru.hedw1q.TgBot.twitch.services.StreamService;
+import ru.hedw1q.TgBot.twitch.services.StreamerService;
 import ru.maximkulikov.goodgame.api.GoodGame;
 import ru.maximkulikov.goodgame.api.handlers.StreamChannelResponseHandler;
 import ru.maximkulikov.goodgame.api.models.ChannelContainer;
 
+import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -36,11 +39,17 @@ public class GGBot {
     @Autowired
     StreamService streamService;
     @Autowired
+    StreamerService streamerService;
+    @Autowired
     TgBot tgBot;
     GoodGame gg = new GoodGame();
 
     StreamStatus streamStatus = StreamStatus.OFFLINE;
 
+    @PostConstruct
+    void afterInit(){
+        streamerService.addNewStreamerIfNotExist(new Streamer(GG_CHANNEL_NAME,"GoodGame",'M'));
+    }
 
     @Scheduled(fixedRate = 60000)
     @Async

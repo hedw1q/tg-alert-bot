@@ -22,7 +22,7 @@ public class Ramona extends FemaleTwitchStreamer {
     private LocalTime subExecutionTime;
     private static int subExecutionDelayInSeconds = 2;
 
-    private boolean subEnabled=false;
+    private boolean subEnabled=true;
 
     public Ramona(String channelName, AuthData authData) {
         super(channelName, authData);

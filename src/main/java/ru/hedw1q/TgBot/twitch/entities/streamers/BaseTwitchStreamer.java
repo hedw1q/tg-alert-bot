@@ -19,10 +19,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.hedw1q.TgBot.telegram.TgBot;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
+import ru.hedw1q.TgBot.twitch.entities.Streamer;
 import ru.hedw1q.TgBot.twitch.services.StreamService;
+import ru.hedw1q.TgBot.twitch.services.StreamerService;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -50,14 +54,15 @@ public abstract class BaseTwitchStreamer implements BaseStreamerI {
     public TgBot tgBot;
     @Autowired
     public StreamService streamService;
+    @Autowired
+    public StreamerService streamerService;
 
     protected int channelViewerCount;
 
     TwitchChat twitchChat;
     TwitchClient twitchClient;
 
-    public BaseTwitchStreamer() {
-    }
+    public BaseTwitchStreamer() {}
 
     public BaseTwitchStreamer(String channelName, AuthData authData) {
         this.channelName = channelName;
@@ -90,11 +95,11 @@ public abstract class BaseTwitchStreamer implements BaseStreamerI {
     }
 
     @PostConstruct
-    void afterInit() {
+    protected void afterInit() {
     }
 
     @PreDestroy
-    void beforeDestroy() {
+    protected void beforeDestroy() {
     }
 
     void registerEventHandlers(EventManager eventManager) {

@@ -3,6 +3,7 @@ package ru.hedw1q.TgBot.telegram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -18,15 +19,14 @@ public class TgBotInitilizer {
     private static final Logger logger = LoggerFactory.getLogger(TgBotInitilizer.class);
 
     @Autowired
-    public TgBotInitilizer(TgBot tgBot) throws TelegramApiException{
-        try{
+    public TgBotInitilizer(TgBot tgBot,CheckStreamStatusCommand checkStreamStatusCommand) throws TelegramApiException {
+        try {
             new TelegramBotsApi(DefaultBotSession.class).registerBot(tgBot);
 
-        //    tgBot.register(new CheckStreamStatusCommand("status", "Статус стрима"));
+            tgBot.register(checkStreamStatusCommand);
             logger.info("Connected to telegram");
-        } catch (TelegramApiException ex){
+        } catch (TelegramApiException ex) {
             logger.error(ex.getMessage());
         }
-
     }
 }

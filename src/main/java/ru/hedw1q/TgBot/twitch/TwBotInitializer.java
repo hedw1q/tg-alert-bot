@@ -1,5 +1,6 @@
 package ru.hedw1q.TgBot.twitch;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -27,8 +28,8 @@ public class TwBotInitializer {
 
 //    @Bean
 //    @Qualifier("krabick")
-//    public Krabick initKrabickBot() {
-//        return new Krabick("Krabick", twitchAuth);
+//    public BaseTwitchStreamer initKrabickBot() {
+//        return new MaleTwitchStreamer("Krabick", twitchAuth);
 //    }
 
     @Bean
@@ -39,7 +40,7 @@ public class TwBotInitializer {
 
     @Bean
     @Qualifier("ellanta")
-    public BaseTwitchStreamer initEllantaBot(){ return new FemaleTwitchStreamer("ellanta", twitchAuth); }
+    public FemaleTwitchStreamer initEllantaBot(){ return new FemaleTwitchStreamer("ellanta", twitchAuth); }
 
     public static AuthData getAuthData() {
         return twitchAuth;
