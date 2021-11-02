@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
 import ru.hedw1q.TgBot.twitch.entities.streamers.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,6 +21,10 @@ public class TwBotInitializer {
     private static final Map<String, String> getenv = System.getenv();
 
     private static final AuthData twitchAuth;
+
+    private List<? extends FemaleTwitchStreamer> femaleTwitchStreamers = new ArrayList<FemaleTwitchStreamer>(Arrays.asList(new Ramona("ellanta", twitchAuth)));
+
+    private List<? extends MaleTwitchStreamer> maleTwitchStreamers = new ArrayList<MaleTwitchStreamer>();
 
     static {
         twitchAuth = new AuthData(
@@ -39,8 +46,14 @@ public class TwBotInitializer {
     }
 
     @Bean
-    @Qualifier("ellanta")
-    public FemaleTwitchStreamer initEllantaBot(){ return new FemaleTwitchStreamer("ellanta", twitchAuth); }
+    public List<? extends FemaleTwitchStreamer> initFemaleBot() {
+        return femaleTwitchStreamers;
+    }
+
+    @Bean
+    public List<? extends MaleTwitchStreamer> initMaleBot() {
+        return maleTwitchStreamers;
+    }
 
     public static AuthData getAuthData() {
         return twitchAuth;
