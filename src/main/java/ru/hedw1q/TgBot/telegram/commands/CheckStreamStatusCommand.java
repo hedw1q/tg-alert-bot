@@ -13,8 +13,6 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.hedw1q.TgBot.twitch.entities.Streamer;
-import ru.hedw1q.TgBot.twitch.entities.streamers.BaseTwitchStreamer;
-import ru.hedw1q.TgBot.twitch.entities.streamers.Ramona;
 import ru.hedw1q.TgBot.twitch.services.StreamService;
 import ru.hedw1q.TgBot.twitch.services.StreamerService;
 
