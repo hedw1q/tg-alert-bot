@@ -22,7 +22,7 @@ public class TwBotInitializer {
 
     private static final AuthData twitchAuth;
 
-    private List<? extends FemaleTwitchStreamer> femaleTwitchStreamers = new ArrayList<FemaleTwitchStreamer>(Arrays.asList(new Ramona("ellanta", twitchAuth)));
+    private List<? extends FemaleTwitchStreamer> femaleTwitchStreamers = new ArrayList<FemaleTwitchStreamer>(Arrays.asList(new FemaleTwitchStreamer("ellanta", twitchAuth)));
 
     private List<? extends MaleTwitchStreamer> maleTwitchStreamers = new ArrayList<MaleTwitchStreamer>();
 
