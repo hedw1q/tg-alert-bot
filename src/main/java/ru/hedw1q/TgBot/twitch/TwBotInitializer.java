@@ -22,9 +22,6 @@ public class TwBotInitializer {
 
     private static final AuthData twitchAuth;
 
-    private List<? extends FemaleTwitchStreamer> femaleTwitchStreamers = new ArrayList<FemaleTwitchStreamer>(Arrays.asList(new FemaleTwitchStreamer("ellanta", twitchAuth)));
-
-    private List<? extends MaleTwitchStreamer> maleTwitchStreamers = new ArrayList<MaleTwitchStreamer>();
 
     static {
         twitchAuth = new AuthData(
@@ -46,13 +43,8 @@ public class TwBotInitializer {
     }
 
     @Bean
-    public List<? extends FemaleTwitchStreamer> initFemaleBot() {
-        return femaleTwitchStreamers;
-    }
-
-    @Bean
-    public List<? extends MaleTwitchStreamer> initMaleBot() {
-        return maleTwitchStreamers;
+    public FemaleTwitchStreamer initFemaleBot() {
+        return new FemaleTwitchStreamer("ellanta", twitchAuth);
     }
 
     public static AuthData getAuthData() {

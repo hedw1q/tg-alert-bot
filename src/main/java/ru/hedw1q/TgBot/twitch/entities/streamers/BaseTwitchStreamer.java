@@ -186,10 +186,10 @@ public abstract class BaseTwitchStreamer implements BaseStreamerI {
         String message = "❗️" + channelName + " сменил/a игру на стриме ❗️\n" +
                 "Категория: " + channelChangeGameEvent.getStream().getGameName() + "\n" +
                 "Название: " + channelChangeGameEvent.getStream().getTitle();
-
+        try {
         String thumbnailUrl = channelChangeGameEvent.getStream().getThumbnailUrl(1600, 900);
 
-        try {
+
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
