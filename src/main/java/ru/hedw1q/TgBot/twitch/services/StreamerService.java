@@ -2,6 +2,7 @@ package ru.hedw1q.TgBot.twitch.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.hedw1q.TgBot.twitch.entities.Stream;
 import ru.hedw1q.TgBot.twitch.entities.Streamer;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface StreamerService {
     Streamer getStreamerByChannelNameAndPlatform(String channelName,String platform);
 
     Streamer addNewStreamerIfNotExist(Streamer streamer);
+
+    void updateStreamerSetSubEvent(Streamer streamer);
 }

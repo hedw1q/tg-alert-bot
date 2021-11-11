@@ -31,16 +31,16 @@ public class SettingsCommand extends BotCommand {
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
-        StringBuilder response = new StringBuilder("honeyramonaflowers sub event status: "+ramona.isSubEnabled()+"; ");
+        StringBuilder response = new StringBuilder("honeyramonaflowers sub event status ");
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chat.getId().toString());
 
         try {
             if(ramona.isSubEnabled()){
-                response.append("now disabled");
+                response.append("disabled");
                 ramona.setSubEnabled(false);
             }else{
-                response.append("now enabled");
+                response.append("enabled");
                 ramona.setSubEnabled(true);
             }
 

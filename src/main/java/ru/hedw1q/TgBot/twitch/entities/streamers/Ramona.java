@@ -6,6 +6,7 @@ import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
 import ru.hedw1q.TgBot.twitch.entities.Stream;
+import ru.hedw1q.TgBot.twitch.entities.Streamer;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ public class Ramona extends FemaleTwitchStreamer {
     private LocalTime subExecutionTime;
     private static int subExecutionDelayInSeconds = 2;
 
-    private boolean subEnabled=true;
+    private boolean subEnabled;
 
     public Ramona(String channelName, AuthData authData) {
         super(channelName, authData);
@@ -96,11 +97,13 @@ public class Ramona extends FemaleTwitchStreamer {
     }
 
     public boolean isSubEnabled() {
-        return subEnabled;
+        return streamerService.getStreamerByChannelNameAndPlatform(channelName, "Twitch").isSubEvent();
     }
 
     public void setSubEnabled(boolean subEnabled) {
-        this.subEnabled = subEnabled;
+        Streamer streamer=new Streamer(channelName,"Twitch");
+        streamer.setSubEvent(subEnabled);
+        streamerService.updateStreamerSetSubEvent(streamer);
     }
 
 }

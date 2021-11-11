@@ -51,4 +51,9 @@ public class StreamerServiceImpl implements StreamerService {
         }
         return streamers.get(0);
     }
+
+    @Override
+    public void updateStreamerSetSubEvent(Streamer streamer) {
+        streamerRepository.updateStreamerSetSubEvent(streamer.isSubEvent(), streamer.getPlatform(), streamer.getChannelName());
+    }
 }
