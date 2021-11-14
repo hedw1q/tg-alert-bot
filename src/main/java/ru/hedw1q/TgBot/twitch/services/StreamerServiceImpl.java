@@ -46,7 +46,7 @@ public class StreamerServiceImpl implements StreamerService {
     @Override
     public Streamer addNewStreamerIfNotExist(Streamer streamer) {
         List<Streamer> streamers = streamerRepository.findByChannelNameAndPlatform(streamer.getChannelName(), streamer.getPlatform());
-        if(streamers==null){
+        if(streamers.size()==0){
             return streamerRepository.save(streamer);
         }
         return streamers.get(0);
