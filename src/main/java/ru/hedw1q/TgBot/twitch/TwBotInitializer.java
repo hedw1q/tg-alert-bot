@@ -38,13 +38,18 @@ public class TwBotInitializer {
 
     @Bean
     @Qualifier("ramona")
-    public Ramona initRamonaBot() {
+    public Ramona initRamona() {
         return new Ramona("honeyramonaflowers", twitchAuth);
     }
 
     @Bean
-    public FemaleTwitchStreamer initFemaleBot() {
+    public FemaleTwitchStreamer initEllanta() {
         return new FemaleTwitchStreamer("ellanta", twitchAuth);
+    }
+
+    @Bean
+    public MaleTwitchStreamer initArtem() {
+        return new MaleTwitchStreamer("Art_em322", twitchAuth);
     }
 
     public static AuthData getAuthData() {
