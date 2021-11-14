@@ -58,7 +58,7 @@ public class Ramona extends FemaleTwitchStreamer {
         try {
             audit(tgBot, "Sub by "+event.getUser().getName());
             //ot 4 do 8
-            TimeUnit.SECONDS.sleep(new Random().nextInt(6) + 3);
+            TimeUnit.SECONDS.sleep(new Random().nextInt(7) + 3);
 
             twitchChat.sendMessage(event.getChannel().getName(), "honeyr1WOW honeyr1WOW honeyr1WOW ");
         } catch (InterruptedException ie) {
