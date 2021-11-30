@@ -60,7 +60,7 @@ public class Ramona extends FemaleTwitchStreamer {
             //ot 4 do 8
             TimeUnit.SECONDS.sleep(new Random().nextInt(7) + 3);
 
-            twitchChat.sendMessage(event.getChannel().getName(), "honeyr1WOW honeyr1WOW honeyr1WOW ");
+            twitchChat.sendMessage(event.getChannel().getName(), "xaxaWOW xaxaWOW xaxaWOW ");
         } catch (InterruptedException ie) {
         } finally {
             subExecutionTime = LocalTime.now();

@@ -44,7 +44,7 @@ public class MessageCreateListener extends MessageListener implements EventListe
         }
 
         tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, discordMessage.getMessageText());
-
+        
         return Mono.empty();
     }
 

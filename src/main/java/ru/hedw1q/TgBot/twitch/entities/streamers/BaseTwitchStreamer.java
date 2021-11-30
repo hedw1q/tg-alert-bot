@@ -12,6 +12,7 @@ import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import com.github.twitch4j.events.ChannelViewerCountUpdateEvent;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -171,6 +172,7 @@ public abstract class BaseTwitchStreamer implements BaseStreamerI {
                     "Зрителей: " + channelViewerCount;
 
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message, true);
+
 
             streamService.setStreamOfflineById(channelGoOfflineEvent.getFiredAtInstant(), streamId);
         } catch (Exception e) {
