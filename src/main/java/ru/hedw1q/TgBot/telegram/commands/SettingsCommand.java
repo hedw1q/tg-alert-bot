@@ -46,7 +46,7 @@ public class SettingsCommand extends BotCommand {
             }else{
                 response.append("enabled");
                 ramona.setSubEnabled(true);
-                zanuda.setSubEnabled(false);
+                zanuda.setSubEnabled(true);
             }
 
             sendMessage.setText(response.toString());
