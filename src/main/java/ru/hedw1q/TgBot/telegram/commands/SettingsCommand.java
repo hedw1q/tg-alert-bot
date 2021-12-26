@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.hedw1q.TgBot.twitch.entities.streamers.Ramona;
+import ru.hedw1q.TgBot.twitch.entities.streamers.Zanuda;
 
 /**
  * @author hedw1q
@@ -24,6 +25,8 @@ public class SettingsCommand extends BotCommand {
 
     @Autowired
     Ramona ramona;
+    @Autowired
+    Zanuda zanuda;
 
     public SettingsCommand() {
         super("switch", "Поменять саб эвент");
@@ -31,7 +34,7 @@ public class SettingsCommand extends BotCommand {
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
-        StringBuilder response = new StringBuilder("honeyramonaflowers sub event status ");
+        StringBuilder response = new StringBuilder("sub event status ");
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chat.getId().toString());
 
@@ -39,9 +42,11 @@ public class SettingsCommand extends BotCommand {
             if(ramona.isSubEnabled()){
                 response.append("disabled");
                 ramona.setSubEnabled(false);
+                zanuda.setSubEnabled(false);
             }else{
                 response.append("enabled");
                 ramona.setSubEnabled(true);
+                zanuda.setSubEnabled(false);
             }
 
             sendMessage.setText(response.toString());

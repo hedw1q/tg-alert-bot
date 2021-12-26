@@ -52,6 +52,11 @@ public class TwBotInitializer {
         return new MaleTwitchStreamer("Art_em322", twitchAuth);
     }
 
+    @Bean
+    public FemaleTwitchStreamer initZnd() {
+        return new FemaleTwitchStreamer("zanuda", twitchAuth);
+    }
+
     public static AuthData getAuthData() {
         return twitchAuth;
     }
