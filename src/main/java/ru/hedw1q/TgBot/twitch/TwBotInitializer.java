@@ -53,8 +53,8 @@ public class TwBotInitializer {
     }
 
     @Bean
-    public FemaleTwitchStreamer initZnd() {
-        return new FemaleTwitchStreamer("zanuda", twitchAuth);
+    public Zanuda initZnd() {
+        return new Zanuda("zanuda", twitchAuth);
     }
 
     public static AuthData getAuthData() {
