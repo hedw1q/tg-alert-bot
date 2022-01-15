@@ -43,11 +43,6 @@ public class TwBotInitializer {
     }
 
     @Bean
-    public FemaleTwitchStreamer initEllanta() {
-        return new FemaleTwitchStreamer("ellanta", twitchAuth);
-    }
-
-    @Bean
     public MaleTwitchStreamer initArtem() {
         return new MaleTwitchStreamer("Art_em322", twitchAuth);
     }
