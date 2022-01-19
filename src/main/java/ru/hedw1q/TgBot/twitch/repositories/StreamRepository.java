@@ -16,9 +16,9 @@ public interface StreamRepository extends JpaRepository<Stream, Integer> {
 
     @Query(value="SELECT * " +
             "FROM public.streams " +
-            "WHERE channel_name =:name and " +
+            "WHERE channel_name ILIKE :name and " +
             "stream_status='LIVE' and " +
-            "id=(SELECT max(id) FROM streams where channel_name=:name)", nativeQuery = true)
+            "id=(SELECT max(id) FROM streams where channel_name ILIKE :name)", nativeQuery = true)
     Stream findCurrentStreamByChannelName(@Param("name") String channelName);
 
     @Query(value="UPDATE streams " +

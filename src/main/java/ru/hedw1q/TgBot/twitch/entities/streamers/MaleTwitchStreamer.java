@@ -3,6 +3,7 @@ package ru.hedw1q.TgBot.twitch.entities.streamers;
 
 import com.github.twitch4j.events.ChannelChangeGameEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
+import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.hedw1q.TgBot.twitch.config.AuthData;
@@ -25,8 +26,8 @@ public class MaleTwitchStreamer extends BaseTwitchStreamer {
 
     @Override
     @PostConstruct
-    protected void afterInit(){
-        streamerService.addNewStreamerIfNotExist(new Streamer(channelName,"Twitch",'M'));
+    protected void afterInit() {
+        streamerService.addNewStreamerIfNotExist(new Streamer(channelName, "Twitch", 'M'));
     }
 
     @Override
@@ -45,11 +46,12 @@ public class MaleTwitchStreamer extends BaseTwitchStreamer {
             streamService.createNewStream(newStream.getStreamStartTime().toInstant(ZoneOffset.UTC), channelName, "Twitch");
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, message);
-            audit(tgBot,e);
+            audit(tgBot, e);
         } finally {
             channelViewerCount = 0;
         }
     }
+
     @Override
     public void onChannelChangeGame(ChannelChangeGameEvent channelChangeGameEvent) {
         try {
@@ -62,8 +64,12 @@ public class MaleTwitchStreamer extends BaseTwitchStreamer {
             tgBot.sendAttachmentMessageToChannel(TG_CHANNEL_ID, thumbnailUrl, message);
         } catch (Exception e) {
             tgBot.sendTextMessageToChannel(TG_CHANNEL_ID, ExceptionUtils.getFullStackTrace(e));
-            audit(tgBot,e);
+            audit(tgBot, e);
         }
     }
 
+    @Override
+    public void onChannelGoOffline(ChannelGoOfflineEvent channelGoOfflineEvent) {
+        super.onChannelGoOffline(channelGoOfflineEvent);
+    }
 }

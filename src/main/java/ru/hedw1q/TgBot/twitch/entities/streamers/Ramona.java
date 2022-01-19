@@ -52,6 +52,7 @@ public class Ramona extends FemaleTwitchStreamer {
 
         if (Duration.between(subExecutionTime, LocalTime.now()).toMillis() < subExecutionDelayInSeconds*1000 || event.getUser().getName().equals("hedw1q")) {
             audit(tgBot, "Skipped sub by " + event.getUser().getName());
+            subExecutionTime = LocalTime.now();
             return;
         }
 
