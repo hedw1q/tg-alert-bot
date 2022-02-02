@@ -42,10 +42,20 @@ public class TwBotInitializer {
         return new Ramona("honeyramonaflowers", twitchAuth);
     }
 
-    @Bean
-    public MaleTwitchStreamer initArtem() {
-        return new MaleTwitchStreamer("Art_em322", twitchAuth);
-    }
+//    @Bean
+//    public MaleTwitchStreamer initArtem() {
+//        return new MaleTwitchStreamer("Art_em322", twitchAuth);
+//    }
+
+//    @Bean
+//    public MaleTwitchStreamer initIlnur() {
+//        return new MaleTwitchStreamer("yolopopa", twitchAuth);
+//    }
+//
+//    @Bean
+//    public MaleTwitchStreamer initNikita() {
+//        return new MaleTwitchStreamer("1loveanother", twitchAuth);
+//    }
 
     @Bean
     public Zanuda initZnd() {
